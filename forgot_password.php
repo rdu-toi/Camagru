@@ -12,9 +12,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Register</title>
+    <title>Forgot Password</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
   </head>
@@ -35,31 +34,21 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="index.php">Login</a></li>
-            <li class="active"><a href="register.php">Register</a></li>
+            <li><a href="register.php">Register</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
     <div class="container">
         <form method="post" style="margin-top:35px;" >
             <div class="form-group">
-                <label>Email address</label>
-                <input type="text" name="name" class="form-control" placeholder="Name">
-            </div>
-            <div class="form-group">
                 <label for="exampleInputEmail1">Email address</label>
                 <input type="email" name="email" class="form-control" placeholder="Email">
             </div>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Password">
-            </div>
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password">
-            </div>
-            <button type="submit" name="register" class="btn btn-default">Register</button>
+
+            <button type="submit" name="send_my_password" class="btn btn-default">Send My Password</button>
+            <a href="index.php" class="btn btn-danger">Cancel</a>
         </form>
 
     </div>
