@@ -1,7 +1,25 @@
 <?php
 
+session_start();
+
 //include('includes/config.php');
 //include('includes/db.php');
+
+if (isset($_POST['register'])){
+	$_SESSION['name'] = $_POST['name'];
+	$_SESSION['email'] = $_POST['email'];
+	$_SESSION['password'] = $_POST['password'];
+	$_SESSION['confirm_password'] = $_POST['confirm_password'];
+
+	if (isset($_POST['name']) < 3){
+		header("Location:register.php?err=" . urlencode("The name must be at least 3 characters long!"));
+		exit();
+	}
+	else if (isset($_POST['password']) != $_POST['confirm_password']){
+		header("Location:register.php?err=" . urlencode("The passwords do not match!"));
+		exit();
+	}
+}
 
 ?>
 
@@ -14,7 +32,6 @@
 
     <title>Register</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
   </head>
@@ -37,27 +54,29 @@
             <li><a href="index.php">Login</a></li>
             <li class="active"><a href="register.php">Register</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
     <div class="container">
         <form method="post" style="margin-top:35px;" >
+            <h2>Register Here</h2>
+            <hr>
             <div class="form-group">
-                <label>Email address</label>
-                <input type="text" name="name" class="form-control" placeholder="Name">
+                <label>Name</label>
+                <input type="text" name="name" class="form-control" placeholder="Name" value="<?php echo @$_SESSION['name']; ?>" required>
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Email address</label>
-                <input type="email" name="email" class="form-control" placeholder="Email">
+                <input type="email" name="email" class="form-control" placeholder="Email" value="<?php echo @$_SESSION['email']; ?>" required>
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Password">
+                <input type="password" name="password" class="form-control" placeholder="Password" value="<?php echo @$_SESSION['password']; ?>" required>
             </div>
             <div class="form-group">
                 <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password">
+                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" value="<?php echo @$_SESSION['confirm_password']; ?>" required>
             </div>
             <button type="submit" name="register" class="btn btn-default">Register</button>
         </form>

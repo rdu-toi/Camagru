@@ -28,7 +28,8 @@ try {
         `username` VARCHAR(30) NOT NULL,
         `password` VARCHAR(30) NOT NULL,
         `email` VARCHAR(50),
-        `reg_date` TIMESTAMP
+        `token` VARCHAR(255),
+        `status` INT NOT NULL DEFAULT '0'
     )";
 
     $conn->exec($sql);

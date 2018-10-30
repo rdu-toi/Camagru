@@ -14,7 +14,6 @@
 
     <title>Login</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
   </head>
@@ -37,12 +36,14 @@
             <li class="active"><a href="index.php">Login</a></li>
             <li><a href="register.php">Register</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
     <div class="container">
         <form method="post" style="margin-top:35px;" >
+        <h2>Login Here</h2>
+        <hr>
     <div class="form-group">
         <label for="exampleInputEmail1">Email address</label>
         <input type="email" name="email" class="form-control" placeholder="Email">
@@ -60,12 +61,8 @@
     <a href="forgot_password.php">Forgot Password?</a>
     </form>
 
-    </div><!-- /.container -->
+    </div>
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/bootstrap.js"></script>
   </body>
 </html>
