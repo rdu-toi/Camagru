@@ -3,7 +3,23 @@
 session_start();
 
 //include('includes/config.php');
-//include('includes/db.php');
+include('includes/db.php');
+
+function isUnique($email){
+	global $conn;
+	$query = $conn->prepare( "SELECT * FROM `user_info` WHERE `email` = '$email'" );
+	$query->bindValue( 1, $email );
+	$query->execute();
+
+	if( $query->rowCount() > 0 ) {
+		$query = null;
+		return false;
+	}
+	else {
+		$query = null;
+		return true;
+	}
+}
 
 if (isset($_POST['register'])){
 	$_SESSION['name'] = $_POST['name'];
@@ -11,13 +27,37 @@ if (isset($_POST['register'])){
 	$_SESSION['password'] = $_POST['password'];
 	$_SESSION['confirm_password'] = $_POST['confirm_password'];
 
-	if (isset($_POST['name']) < 3){
+	if (strlen($_POST['name']) < 3){
 		header("Location:register.php?err=" . urlencode("The name must be at least 3 characters long!"));
 		exit();
 	}
-	else if (isset($_POST['password']) != $_POST['confirm_password']){
+	else if ($_POST['password'] != $_POST['confirm_password']){
 		header("Location:register.php?err=" . urlencode("The passwords do not match!"));
 		exit();
+	}
+	else if (strlen($_POST['password']) < 5){
+		header("Location:register.php?err=" . urlencode("The password must be at least 5 characters long!"));
+		exit();
+	}
+	else if (!isUnique($_POST['email'])){
+		header("Location:register.php?err=" . urlencode("The email is already in use. Please use another or sign in using this email!"));
+		exit();
+	}
+	else {
+		try {
+			$name = $_POST['name'];
+			$password = $_POST['password'];
+			$email = $_POST['email'];
+			$token = bin2hex(openssl_random_pseudo_bytes(32));
+
+			$stmt = $conn->prepare("INSERT INTO `user_info` (`username`, `password`, `email`, `token`) VALUES ('$name', '$password', '$email', '$token')");
+			$stmt->execute();
+			}
+		catch(PDOException $e)
+			{
+			echo "Error: " . $e->getMessage();
+			}
+		$stmt = null;
 	}
 }
 
@@ -59,8 +99,15 @@ if (isset($_POST['register'])){
     </nav>
 
     <div class="container">
-        <form method="post" style="margin-top:35px;" >
+        <form action="register.php" method="post" style="margin-top:35px;" >
             <h2>Register Here</h2>
+
+			<?php if(isset($_GET['err'])) { ?>
+
+			<div class="alert alert-danger"><?php echo $_GET['err']; ?></div>
+
+			<?php } ?>
+
             <hr>
             <div class="form-group">
                 <label>Name</label>
