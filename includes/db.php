@@ -1,5 +1,3 @@
-
-$DB_DSN = "mysql:host=localhost;dbname=". $DB_NAME . ";charset=utf8";
 <?php
 $DB_DSN_SHORT = "mysql:host=localhost;charset=utf8";
 $DB_NAME = "Camagru";

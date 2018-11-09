@@ -2,7 +2,7 @@
 
 session_start();
 //include('includes/config.php');
-//include('includes/db.php');
+include('includes/db.php');
 
 ?>
 
@@ -44,7 +44,7 @@ session_start();
 
     <div class="container">
         <div class="jumbotron">
-            <h2>Welcome <?php $_SESSION['user_name']; ?></h2>
+            <h2>Welcome <?php echo $_SESSION['user_email']; ?></h2>
         </div>
 
     </div>

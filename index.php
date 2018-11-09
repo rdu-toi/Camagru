@@ -1,7 +1,8 @@
 <?php
 
+session_start();
 //include('includes/config.php');
-//include('includes/db.php');
+include('includes/db.php');
 
 ?>
 
@@ -41,8 +42,15 @@
     </nav>
 
     <div class="container">
-        <form method="post" style="margin-top:35px;" >
+        <form action="index.php" method="post" style="margin-top:35px;" >
         <h2>Login Here</h2>
+
+			<?php if(isset($_GET['success'])) { ?>
+
+			<div class="alert alert-danger"><?php echo $_GET['success']; ?></div>
+
+			<?php } ?>
+
         <hr>
     <div class="form-group">
         <label for="exampleInputEmail1">Email address</label>

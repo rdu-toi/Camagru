@@ -6,7 +6,7 @@
 <body>
     <?php
     
-    $to = "rdu-toi@student.wethinkcode.co.za";
+    $to = "dutoit1998@gmail.com";
     $subject = "Test mail";
     $message = "Hello! This is a test email.";
     $from = "someonelse@example.com";
