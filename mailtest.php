@@ -8,8 +8,8 @@
     
     $to = "dutoit1998@gmail.com";
     $subject = "Test mail";
-    $message = "Hello! This is a test email.";
-    $from = "someonelse@example.com";
+    $message = "Someone's been a naughty boy this year!";
+    $from = "santa@northpole.com";
     $headers = "From:" . $from;
 
     if(mail($to, $subject, $message, $headers)){

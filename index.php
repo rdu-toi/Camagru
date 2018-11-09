@@ -1,8 +1,30 @@
 <?php
 
 session_start();
-//include('includes/config.php');
 include('includes/db.php');
+
+if (isset($_POST['login'])){
+	$email = $_POST['email'];
+	$password = $_POST['password'];
+
+	$query = $conn->prepare( "UPDATE `user_info` SET STATUS = '1' WHERE `token` = '$token'");
+	$result = $query->execute();
+	if ($row = $result->fetch(PDO::FETCH_ASSOC)){
+		if ($row['status'] == 1){
+			$_SESSION['user_email'] = $email;
+			header("Location:myaccount.php");
+			exit();
+		}
+		else {
+			header("Location:index.php?err=" . urlencode("The user account is not activated!"));
+			exit();
+		}
+	}
+	else {
+		header("Location:index.php?err=" . urlencode("Incorrect Email or Password!"));
+		exit();
+	}
+}
 
 ?>
 
@@ -47,7 +69,7 @@ include('includes/db.php');
 
 			<?php if(isset($_GET['success'])) { ?>
 
-			<div class="alert alert-danger"><?php echo $_GET['success']; ?></div>
+			<div class="alert alert-success"><?php echo $_GET['success']; ?></div>
 
 			<?php } ?>
 
