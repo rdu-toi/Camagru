@@ -7,9 +7,9 @@ if (isset($_POST['login'])){
 	$email = $_POST['email'];
 	$password = $_POST['password'];
 
-	$query = $conn->prepare( "UPDATE `user_info` SET STATUS = '1' WHERE `token` = '$token'");
+	$query = $conn->prepare("SELECT * FROM `user_info` WHERE `email` = '$email' AND `password` = '$password'");
 	$result = $query->execute();
-	if ($row = $result->fetch(PDO::FETCH_ASSOC)){
+	if ($row = $result->fetch()){
 		if ($row['status'] == 1){
 			$_SESSION['user_email'] = $email;
 			header("Location:myaccount.php");
