@@ -73,6 +73,12 @@ if (isset($_POST['login'])){
 
 			<?php } ?>
 
+			<?php if(isset($_GET['err'])) { ?>
+
+			<div class="alert alert-danger"><?php echo $_GET['err']; ?></div>
+
+			<?php } ?>
+
         <hr>
     <div class="form-group">
         <label for="exampleInputEmail1">Email address</label>
