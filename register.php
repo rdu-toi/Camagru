@@ -4,6 +4,12 @@ session_start();
 
 //include('includes/config.php');
 include('includes/db.php');
+include('includes/functions.php');
+
+if(loggedIn()){
+  header("Location:myaccount.php");
+  exit();
+}
 
 function isUnique($email){
 	global $conn;
@@ -91,7 +97,7 @@ if (isset($_POST['register'])){
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Camagru</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">

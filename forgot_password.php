@@ -3,6 +3,26 @@
 //include('includes/config.php');
 include('includes/db.php');
 
+if(isset($_POST['send_my_password'])){
+  $email = $_POST['email'];
+	$query = "SELECT * FROM `user_info` WHERE `email` = '$email'";
+	$result = $conn->query($query);
+	if ($row = $result->fetch(PDO::FETCH_ASSOC)){
+    $password = $row['password'];
+
+    if(mail($email, 'Your Password!', "Your password is: $password", 'From: rdu-toi@student.wethinkcode.co.za')){
+      header("Location:index.php?success=" . urlencode("Your password has been sent to your email!"));
+      exit();
+    } else {
+      header("Location:forgot_password.php?err=" . urlencode("Sorry, we could not send your password at this time!"));
+      exit();
+    }
+  } else {
+      header("Location:forgot_password.php?err=" . urlencode("Sorry, no user exists with the provided email!"));
+      exit();
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +49,7 @@ include('includes/db.php');
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Camagru</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -41,10 +61,24 @@ include('includes/db.php');
     </nav>
 
     <div class="container">
-        <form method="post" style="margin-top:35px;" >
+        <form action="forgot_password.php" method="post" style="margin-top:35px;" >
+        <h2>Retrieve Password</h2>
+
+			<?php if(isset($_GET['success'])) { ?>
+
+            <div class="alert alert-success"><?php echo $_GET['success']; ?></div>
+
+      <?php } ?>
+
+      <?php if(isset($_GET['err'])) { ?>
+
+            <div class="alert alert-danger"><?php echo $_GET['err']; ?></div>
+
+      <?php } ?>
+        <hr>
             <div class="form-group">
                 <label for="exampleInputEmail1">Email address</label>
-                <input type="email" name="email" class="form-control" placeholder="Email">
+                <input type="email" name="email" class="form-control" placeholder="Email" required>
             </div>
 
             <button type="submit" name="send_my_password" class="btn btn-default">Send My Password</button>

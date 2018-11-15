@@ -2,16 +2,25 @@
 
 session_start();
 include('includes/db.php');
+include('includes/functions.php');
+
+if(loggedIn()){
+  header("Location:myaccount.php");
+  exit();
+}
 
 if (isset($_POST['login'])){
 	$email = $_POST['email'];
 	$password = $_POST['password'];
 
-	$query = $conn->prepare("SELECT * FROM `user_info` WHERE `email` = '$email' AND `password` = '$password'");
-	$result = $query->execute();
-	if ($row = $result->fetch()){
+	$query = "SELECT * FROM `user_info` WHERE `email` = '$email' AND `password` = '$password'";
+	$result = $conn->query($query);
+	if ($row = $result->fetch(PDO::FETCH_ASSOC)){
 		if ($row['status'] == 1){
-			$_SESSION['user_email'] = $email;
+      $_SESSION['user_email'] = $email;
+      if(isset($_POST['remember_me'])){
+        setcookie("user_email", $email, time()+60*5);
+      }
 			header("Location:myaccount.php");
 			exit();
 		}
@@ -52,7 +61,7 @@ if (isset($_POST['login'])){
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Camagru</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">

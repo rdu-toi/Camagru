@@ -3,6 +3,12 @@
 session_start();
 //include('includes/config.php');
 include('includes/db.php');
+include('includes/functions.php');
+
+if(!loggedIn()){
+  header("Location:index.php?err=" . urlencode("You need to login to view account!"));
+  exit();
+}
 
 ?>
 
@@ -30,7 +36,7 @@ include('includes/db.php');
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Camagru</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -44,7 +50,7 @@ include('includes/db.php');
 
     <div class="container">
         <div class="jumbotron">
-            <h2>Welcome <?php echo $_SESSION['user_email']; ?></h2>
+            <h2>Welcome <?php if(isset($_SESSION['user_email'])){ echo $_SESSION['user_email'];} else echo $_COOKIE['user_email']; ?></h2>
         </div>
 
     </div>
