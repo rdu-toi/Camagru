@@ -1,6 +1,5 @@
 <?php
 
-//include('includes/config.php');
 include('includes/db.php');
 
 if(isset($_POST['send_my_password'])){

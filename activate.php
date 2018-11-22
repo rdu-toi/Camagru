@@ -2,15 +2,6 @@
 
 include('includes/db.php');
 
-// if (isset($_GET['token'])){
-// 	$token = $_GET['token'];
-// 	$query = $conn->prepare( "UPDATE `user_info` SET STATUS='1' WHERE `token`='$token" );
-// 	if($query->execute() == TRUE){
-// 		header("Location:index.php?success=Account Activated");
-// 		exit();
-// 	}
-// }
-
 if (isset($_GET['token'])){
 	try {
 		$token = $_GET['token'];
