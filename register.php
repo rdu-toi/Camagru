@@ -51,11 +51,12 @@ if (isset($_POST['register'])){
 	else {
 		try {
 			$name = $_POST['name'];
-			$password = $_POST['password'];
+      $password = $_POST['password'];
+      $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 			$email = $_POST['email'];
 			$token = bin2hex(openssl_random_pseudo_bytes(32));
 
-			$stmt = $conn->prepare("INSERT INTO `user_info` (`username`, `password`, `email`, `token`) VALUES ('$name', '$password', '$email', '$token')");
+			$stmt = $conn->prepare("INSERT INTO `user_info` (`username`, `password`, `email`, `token`) VALUES ('$name', '$hashed_password', '$email', '$token')");
 			$stmt->execute();
       $stmt = null;
       $message = "Hi $name! Your account has been created, here is the activation link http://localhost:8080/Camagru_v2/activate.php?token=$token";

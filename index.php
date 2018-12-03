@@ -11,11 +11,12 @@ if(loggedIn()){
 
 if (isset($_POST['login'])){
 	$email = $_POST['email'];
-	$password = $_POST['password'];
+  $password = $_POST['password'];
 
-	$query = "SELECT * FROM `user_info` WHERE `email` = '$email' AND `password` = '$password'";
-	$result = $conn->query($query);
-	if ($row = $result->fetch(PDO::FETCH_ASSOC)){
+  $query = "SELECT * FROM `user_info` WHERE `email` = '$email'";
+  $result = $conn->query($query);
+  $row = $result->fetch(PDO::FETCH_ASSOC);
+	if ($row && password_verify($password, $row['password'])){
 		if ($row['status'] == 1){
       $_SESSION['user_email'] = $email;
       if(isset($_POST['remember_me'])){
