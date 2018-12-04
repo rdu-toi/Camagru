@@ -16,6 +16,7 @@
     document.getElementById("snap").addEventListener("click", function() {
         context.scale(-1 ,1);
         context.drawImage(video, 0, 0, 400 * -1, 300);
+        context.save();
         context.drawImage(img, 200, 20, 90, 90);
     });
 })();

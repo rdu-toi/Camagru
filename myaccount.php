@@ -51,9 +51,13 @@ if(!loggedIn()){
         <div class="jumbotron">
             <h2>Welcome <?php if(isset($_SESSION['user_email'])){ echo $_SESSION['user_email'];} else echo $_COOKIE['user_email']; ?></h2>
         </div>
-
+    </div>
+    <div class="booth">
+        <video id="video" width="400" height="300" autoplay></video>
+        <button id="snap">Snap Photo</button>
+        <canvas id="canvas" width="400" height="300"></canvas>
     </div>
 
-    <script src="js/bootstrap.js"></script>
+    <script src="js/photo.js"></script>
   </body>
 </html>
