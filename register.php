@@ -139,7 +139,5 @@ if (isset($_POST['register'])){
         </form>
 
     </div>
-
-    <script src="js/bootstrap.js"></script>
   </body>
 </html>

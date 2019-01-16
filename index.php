@@ -108,7 +108,5 @@ if (isset($_POST['login'])){
     </form>
 
     </div>
-
-    <script src="js/bootstrap.js"></script>
   </body>
 </html>

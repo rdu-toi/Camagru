@@ -9,6 +9,42 @@ if(!loggedIn()){
   exit();
 }
 
+var $getname;
+
+if(isset($_SESSION['user_email']){
+  $getname = $_SESSION['user_email'];
+}
+else if (isset($_COOKIE['user_email']){
+  $getname = $_COOKIE['user_email'];
+}
+else{
+  header("Location:index.php?err=" . urlencode("You need to login!"));
+  exit();
+}
+
+function getUserName($email){
+	$query = $conn->prepare( "SELECT * FROM `user_info` WHERE `email` = '$email'" );
+  $query->execute();
+  return $query;
+	}
+}
+
+if (isset($_POST['submit'])){
+  try {
+    $name = $_POST['imgsrc'];
+    $results = getUserName($getname);
+    $stmt = $conn->prepare("INSERT INTO `gallery` (`userid`, `name`, `photo`) VALUES ('$results['id']', '$results['name']', '$name')");
+    $stmt->execute();
+    $stmt = null;
+    header("Location:myaccount.php?success=" . urlencode("Photo successfully submitted!"));
+    exit();
+    }
+  catch(PDOException $e)
+    {
+    echo "Error: " . $e->getMessage();
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -52,10 +88,31 @@ if(!loggedIn()){
             <h2>Welcome <?php if(isset($_SESSION['user_email'])){ echo $_SESSION['user_email'];} else echo $_COOKIE['user_email']; ?></h2>
         </div>
     </div>
+    
+    <?php if(isset($_GET['success'])) { ?>
+
+        <div class="alert alert-success"><?php echo $_GET['success']; ?></div>
+
+    <?php } ?>
+
     <div class="booth">
         <video id="video" width="400" height="300" autoplay></video>
         <button id="snap">Snap Photo</button>
         <canvas id="canvas" width="400" height="300"></canvas>
+        <form method="post" action="myaccount.php">
+          <input name="imgsrc" id="imgsrc" type="hidden" value="">
+          <button type="submit" id="submitphoto">Submit Photo</button>
+        </form>
+    </div>
+    </br>
+        <img id="test">
+    </br>
+    <div class="flex-container">
+        <img class="items" src="http://localhost:8080/Camagru_v2/img/1.png">
+        <img class="items" src="http://localhost:8080/Camagru_v2/img/2.png">
+        <img class="items" src="http://localhost:8080/Camagru_v2/img/1.png">
+        <img class="items" src="http://localhost:8080/Camagru_v2/img/2.png">
+        <img class="items" src="http://localhost:8080/Camagru_v2/img/1.png">
     </div>
 
     <script src="js/photo.js"></script>
