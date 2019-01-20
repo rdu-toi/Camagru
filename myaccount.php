@@ -9,36 +9,19 @@ if(!loggedIn()){
   exit();
 }
 
-var $getname;
-
-if(isset($_SESSION['user_email']){
-  $getname = $_SESSION['user_email'];
-}
-else if (isset($_COOKIE['user_email']){
-  $getname = $_COOKIE['user_email'];
-}
-else{
-  header("Location:index.php?err=" . urlencode("You need to login!"));
-  exit();
-}
-
-function getUserName($email){
-	$query = $conn->prepare( "SELECT * FROM `user_info` WHERE `email` = '$email'" );
-  $query->execute();
-  return $query;
-	}
-}
+$getname = $_SESSION['user_email'];
 
 if (isset($_POST['submit'])){
   try {
+    $query = $conn->prepare("SELECT `id` FROM `user_info` WHERE `email` = '$getname'");
+    $result = $query->execute();
     $name = $_POST['imgsrc'];
-    $results = getUserName($getname);
-    $stmt = $conn->prepare("INSERT INTO `gallery` (`userid`, `name`, `photo`) VALUES ('$results['id']', '$results['name']', '$name')");
+    $stmt = $conn->prepare("INSERT INTO `gallery` (`userid`, `photo`) VALUES ('$result', '$name')");
     $stmt->execute();
     $stmt = null;
-    header("Location:myaccount.php?success=" . urlencode("Photo successfully submitted!"));
+    header("Location:myaccount.php?success=" . urlencode("Photo successfully submitted! "));
     exit();
-    }
+  }
   catch(PDOException $e)
     {
     echo "Error: " . $e->getMessage();
@@ -75,9 +58,8 @@ if (isset($_POST['submit'])){
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="index.php">Login</a></li>
-            <li><a href="register.php">Register</a></li>
             <li><a href="logout.php">Logout</a></li>
+            <li><a href="gallery.php">Gallery</a></li>
           </ul>
         </div>
       </div>
@@ -95,24 +77,28 @@ if (isset($_POST['submit'])){
 
     <?php } ?>
 
+    <?php if(isset($_GET['err'])) { ?>
+
+    <div class="alert alert-danger"><?php echo $_GET['err']; ?></div>
+
+    <?php } ?>
+
     <div class="booth">
         <video id="video" width="400" height="300" autoplay></video>
         <button id="snap">Snap Photo</button>
         <canvas id="canvas" width="400" height="300"></canvas>
         <form method="post" action="myaccount.php">
           <input name="imgsrc" id="imgsrc" type="hidden" value="">
-          <button type="submit" id="submitphoto">Submit Photo</button>
+          <button type="submit" name="submit" id="submitphoto">Submit Photo</button>
         </form>
     </div>
-    </br>
-        <img id="test">
     </br>
     <div class="flex-container">
         <img class="items" src="http://localhost:8080/Camagru_v2/img/1.png">
         <img class="items" src="http://localhost:8080/Camagru_v2/img/2.png">
-        <img class="items" src="http://localhost:8080/Camagru_v2/img/1.png">
-        <img class="items" src="http://localhost:8080/Camagru_v2/img/2.png">
-        <img class="items" src="http://localhost:8080/Camagru_v2/img/1.png">
+        <img class="items" src="http://localhost:8080/Camagru_v2/img/3.png">
+        <img class="items" src="http://localhost:8080/Camagru_v2/img/4.png">
+        <img class="items" src="http://localhost:8080/Camagru_v2/img/5.png">
     </div>
 
     <script src="js/photo.js"></script>

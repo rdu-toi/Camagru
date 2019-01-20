@@ -68,6 +68,7 @@ if (isset($_POST['login'])){
           <ul class="nav navbar-nav">
             <li class="active"><a href="index.php">Login</a></li>
             <li><a href="register.php">Register</a></li>
+            <li><a href="gallery.php">Gallery</a></li>
           </ul>
         </div>
       </div>
