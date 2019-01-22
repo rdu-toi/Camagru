@@ -51,6 +51,7 @@ try {
     $sql = "CREATE TABLE `Gallery` (
         `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         `userid` INT(100) NOT NULL,
+        `username` VARCHAR(30),
         `name` VARCHAR(100) NOT NULL,
         FOREIGN KEY (userid) REFERENCES User_info(id)
     )";

@@ -13,13 +13,18 @@ $getname = $_SESSION['user_email'];
 
 if (isset($_POST['submit'])){
   try {
-    $query = $conn->prepare("SELECT `id` FROM `user_info` WHERE `email` = '$getname'");
-    $result = $query->execute();
-    $name = $_POST['imgsrc'];
-    $stmt = $conn->prepare("INSERT INTO `gallery` (`userid`, `photo`) VALUES ('$result', '$name')");
-    $stmt->execute();
-    $stmt = null;
-    header("Location:myaccount.php?success=" . urlencode("Photo successfully submitted! "));
+    $query = $conn->prepare("SELECT * FROM `user_info` WHERE `email` = '$getname'");
+    $query->execute();
+    $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    $photo = $_POST['imgsrc'];
+    foreach($result as $key => $row){
+      $stmt = $conn->prepare("INSERT INTO `gallery` (`userid`, `username`, `photo`) VALUES (:id, :username, '$photo')");
+      $stmt->bindValue(':id', $row['id']);
+      $stmt->bindValue(':username', $row['username']);
+      $stmt->execute();
+      $stmt = null;
+    }
+    header("Location:myaccount.php?success=" . urlencode("Photo successfully submitted! " . $row['id']));
     exit();
   }
   catch(PDOException $e)
@@ -67,7 +72,11 @@ if (isset($_POST['submit'])){
 
     <div class="container">
         <div class="jumbotron">
-            <h2>Welcome <?php if(isset($_SESSION['user_email'])){ echo $_SESSION['user_email'];} else echo $_COOKIE['user_email']; ?></h2>
+            <h2>Welcome <?php if(isset($_SESSION['user_email'])){ 
+              echo $_SESSION['user_email'];} 
+              else echo $_COOKIE['user_email']; 
+              ?>
+            </h2>
         </div>
     </div>
     

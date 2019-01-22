@@ -66,18 +66,24 @@ include('includes/functions.php');
     </div>
     </br>
         <?php
+            if ($_GET['id']){
+                $id = $_GET['id'];    
             try {
-              $results = $conn->prepare("SELECT * FROM `gallery`");
-              $results->execute();
-              $rows = $results->fetchAll();
-              foreach($rows as $key => $value){
-                echo '<div style="position:relative;float:left;"><a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a><div style="position: absolute;width:400px;height:40px;bottom:0px;background-color:black;opacity:0.6;color:#f1f1f1;">'.$value['username'].'</div></div>';
-              }
+                $results = $conn->prepare("SELECT * FROM `gallery` WHERE `id` = '$id'");
+                $results->execute();
+                $rows = $results->fetchAll(PDO::FETCH_ASSOC);
+                foreach($rows as $key => $value){
+                  echo '<div style="position:relative;float:left;"><img src="'.$value['photo'].'"/></div><div width="400" height="300"><form action="comments.php"><textarea rows="4" cols="50"></textarea></form></div></div>';
+                //   echo '<div width="400" height="300"><form action="comments.php"><textarea rows="4" cols="50"></textarea></form></div>';
+                }
             }
-            catch(PDOException $e)
-              {
-              echo "Error: " . $e->getMessage();
-              }
+              catch(PDOException $e)
+                {
+                echo "Error: " . $e->getMessage();
+                }
+            }
+            else header("Location:index.php?err=" . urlencode("Error!"));
+
         ?>
 
   </body>
