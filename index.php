@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-include('includes/db.php');
-include('includes/functions.php');
+include('config/database.php');
+include('config/functions.php');
 
 if(loggedIn()){
   header("Location:myaccount.php");

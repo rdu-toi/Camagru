@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-include('includes/db.php');
-include('includes/functions.php');
+include('config/database.php');
+include('config/functions.php');
 
 if(!loggedIn()){
   header("Location:index.php?err=" . urlencode("You need to login to view account!"));
@@ -12,25 +12,31 @@ if(!loggedIn()){
 $getname = $_SESSION['user_email'];
 
 if (isset($_POST['submit'])){
-  try {
-    $query = $conn->prepare("SELECT * FROM `user_info` WHERE `email` = '$getname'");
-    $query->execute();
-    $result = $query->fetchAll(PDO::FETCH_ASSOC);
-    $photo = $_POST['imgsrc'];
-    foreach($result as $key => $row){
-      $stmt = $conn->prepare("INSERT INTO `gallery` (`userid`, `username`, `photo`) VALUES (:id, :username, '$photo')");
-      $stmt->bindValue(':id', $row['id']);
-      $stmt->bindValue(':username', $row['username']);
-      $stmt->execute();
-      $stmt = null;
+  if ($_POST['imgsrc']){
+    try {
+      $query = $conn->prepare("SELECT * FROM `user_info` WHERE `email` = '$getname'");
+      $query->execute();
+      $result = $query->fetchAll(PDO::FETCH_ASSOC);
+      $name = $_POST['imgsrc'];
+      foreach($result as $key => $row){
+        $stmt = $conn->prepare("INSERT INTO `gallery` (`userid`, `username`, `photo`) VALUES (:id, :username, '$name')");
+        $stmt->bindValue(':id', $row['id']);
+        $stmt->bindValue(':username', $row['username']);
+        $stmt->execute();
+        $stmt = null;
+      }
+      header("Location:myaccount.php?success=" . urlencode("Photo successfully submitted!"));
+      exit();
     }
-    header("Location:myaccount.php?success=" . urlencode("Photo successfully submitted! " . $row['id']));
+    catch(PDOException $e)
+      {
+      echo "Error: " . $e->getMessage();
+      }
+  }
+  else{
+    header("Location:myaccount.php?err=" . urlencode("You need to choose a sticker before uploading!"));
     exit();
   }
-  catch(PDOException $e)
-    {
-    echo "Error: " . $e->getMessage();
-    }
 }
 
 ?>
@@ -74,7 +80,9 @@ if (isset($_POST['submit'])){
         <div class="jumbotron">
             <h2>Welcome <?php if(isset($_SESSION['user_email'])){ 
               echo $_SESSION['user_email'];} 
-              else echo $_COOKIE['user_email']; 
+              else if ($_COOKIE['user_email']){
+                echo $_COOKIE['user_email'];}
+              else echo "Human!"; 
               ?>
             </h2>
         </div>

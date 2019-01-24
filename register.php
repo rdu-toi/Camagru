@@ -2,8 +2,8 @@
 
 session_start();
 
-include('includes/db.php');
-include('includes/functions.php');
+include('config/database.php');
+include('config/functions.php');
 
 if(loggedIn()){
   header("Location:myaccount.php");
@@ -38,12 +38,48 @@ if (isset($_POST['register'])){
 	}
 	else if ($_POST['password'] != $_POST['confirm_password']){
 		header("Location:register.php?err=" . urlencode("The passwords do not match!"));
+    exit();
+  }
+	
+	if ( strlen( $_POST['password'] ) < 8 ) {
+		header("Location:register.php?err=" . urlencode("The password needs to be atleast 8 characters long!"));
 		exit();
 	}
-	else if (strlen($_POST['password']) < 5){
-		header("Location:register.php?err=" . urlencode("The password must be at least 5 characters long!"));
+
+	if ( $_POST['password'] == $_POST['name'] ) {
+		header("Location:register.php?err=" . urlencode("The password cannot match your username!"));
 		exit();
 	}
+
+	if ( strpos( $_POST['password'], $_POST['name'] ) !== false ) {
+		header("Location:register.php?err=" . urlencode("The password cannot match your username!"));
+		exit();
+	}
+
+	if ( ! preg_match( '/[a-z]/', $_POST['password'] ) ) {
+		header("Location:register.php?err=" . urlencode("The passwords needs atleast one lowercase letter!"));
+		exit();
+	}
+
+	if ( ! preg_match( '/[A-Z]/', $_POST['password'] ) ) {
+		header("Location:register.php?err=" . urlencode("The passwords needs atleast one uppercase letter!"));
+		exit();
+	}
+
+	if ( ! preg_match( '/[0-9]/', $_POST['password'] ) ) {
+		header("Location:register.php?err=" . urlencode("The passwords needs atleast one number!"));
+		exit();
+	}
+
+	if ( ! preg_match( '/[\W]/', $_POST['password'] ) ) {
+		header("Location:register.php?err=" . urlencode("The passwords needs atleast one special character!"));
+		exit();
+	}
+
+  else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    header("Location:register.php?err=" . urlencode("Please enter a valid email!"));
+    exit();
+  }
 	else if (!isUnique($_POST['email'])){
 		header("Location:register.php?err=" . urlencode("The email is already in use. Please use another or sign in using this email!"));
 		exit();

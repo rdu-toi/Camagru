@@ -1,6 +1,6 @@
 <?php
 
-include('includes/db.php');
+include('config/database.php');
 
 if(isset($_POST['send_my_password'])){
   $email = $_POST['email'];

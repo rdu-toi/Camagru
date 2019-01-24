@@ -1,4 +1,5 @@
 body {
+    background-image: url("../img/background.jpg");
     padding-top: 50px;
   }
   .starter-template {
@@ -7,9 +8,9 @@ body {
   }
 
   .booth {
-    width: 400px;
+    width: 420px;
     border: 10px solid black;
-    background-color: aqua;
+    background-image: url("../img/booth.jpg");
     margin: 0 auto;
   }
 

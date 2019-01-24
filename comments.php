@@ -1,8 +1,47 @@
 <?php
 
 session_start();
-include('includes/db.php');
-include('includes/functions.php');
+include('config/database.php');
+include('config/functions.php');
+
+if(!loggedIn()){
+    header("Location:index.php?err=" .urlencode("You need to login to leave a comment!"));
+    exit();
+}
+
+if (isset($_SESSION['id'])){
+    $id = $_SESSION['id'];
+}
+else {
+    $_SESSION['id'] = $id;
+}
+
+$idstr = $_GET['id'];
+$id = (int)$idstr;
+
+$useremail = $_SESSION['user_email'];
+
+if (isset($_POST['submitcomment'])){
+    try {
+        $comment = $_POST['comment'];
+
+        $query = $conn->prepare("SELECT * FROM `user_info` WHERE `email` = '$useremail'");
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        foreach($result as $key => $row){
+          $stmt = $conn->prepare("INSERT INTO `comments` (`photoid`, `username`, `comment`) VALUES ('$id', :username, '$comment')");
+          $stmt->bindValue(':username', $row['username']);
+          $stmt->execute();
+          $stmt = null;
+        }
+        header("Location:gallery.php?success=" . urlencode("Comment submitted!"));
+        exit();
+        }
+    catch(PDOException $e)
+        {
+        echo "Error: " . $e->getMessage();
+        }
+}
 
 ?>
 
@@ -38,6 +77,7 @@ include('includes/functions.php');
             if(loggedIn()){
                 echo '<li><a href="logout.php">Logout</a></li>';
                 echo '<li><a href="myaccount.php">My Account</a></li>';
+                echo '<li><a href="gallery.php">Gallery</a></li>';
             }
             else {
                 echo '<li><a href="index.php">Login</a></li>';
@@ -55,7 +95,7 @@ include('includes/functions.php');
             if (loggedIn()){ 
                 if(isset($_SESSION['user_email'])){
                     echo $_SESSION['user_email'];
-                } 
+                }
                 else if(isset($_COOKIE['user_email'])){
                     echo $_COOKIE['user_email'];
                 }
@@ -65,26 +105,21 @@ include('includes/functions.php');
         </div>
     </div>
     </br>
+    <div class="booth">
         <?php
-            if ($_GET['id']){
-                $id = $_GET['id'];    
             try {
                 $results = $conn->prepare("SELECT * FROM `gallery` WHERE `id` = '$id'");
                 $results->execute();
                 $rows = $results->fetchAll(PDO::FETCH_ASSOC);
                 foreach($rows as $key => $value){
-                  echo '<div style="position:relative;float:left;"><img src="'.$value['photo'].'"/></div><div width="400" height="300"><form action="comments.php"><textarea rows="4" cols="50"></textarea></form></div></div>';
-                //   echo '<div width="400" height="300"><form action="comments.php"><textarea rows="4" cols="50"></textarea></form></div>';
+                  echo '<img src="'.$value['photo'].'" width="400" height="300";/><form action="comments.php" method="post";></br><textarea rows="5" cols="48" name="comment" required placeholder="Leave a comment here!";></textarea><button type="submit" class="btn btn-default" name="submitcomment">Submit Comment</button></form></div>';
                 }
             }
               catch(PDOException $e)
                 {
                 echo "Error: " . $e->getMessage();
                 }
-            }
-            else header("Location:index.php?err=" . urlencode("Error!"));
-
         ?>
-
+    </div>
   </body>
 </html>

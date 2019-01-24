@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-include('includes/db.php');
-include('includes/functions.php');
+include('config/database.php');
+include('config/functions.php');
 
 ?>
 
@@ -55,15 +55,27 @@ include('includes/functions.php');
             if (loggedIn()){ 
                 if(isset($_SESSION['user_email'])){
                     echo $_SESSION['user_email'];
-                } 
+                }
                 else if(isset($_COOKIE['user_email'])){
                     echo $_COOKIE['user_email'];
                 }
-                else echo 'Guest';
-            }?>
+                else echo "Guest";
+            }
+            ?>
             </h2>
         </div>
     </div>
+    <?php if(isset($_GET['success'])) { ?>
+
+        <div class="alert alert-success"><?php echo $_GET['success']; ?></div>
+
+    <?php } ?>
+
+    <?php if(isset($_GET['err'])) { ?>
+
+        <div class="alert alert-danger"><?php echo $_GET['err']; ?></div>
+
+    <?php } ?>
     </br>
         <?php
             try {
@@ -71,13 +83,13 @@ include('includes/functions.php');
               $results->execute();
               $rows = $results->fetchAll();
               foreach($rows as $key => $value){
-                echo '<div style="position:relative;float:left;"><a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a><div style="position: absolute;width:400px;height:40px;bottom:0px;background-color:black;opacity:0.6;color:#f1f1f1;">'.$value['username'].'</div></div>';
+                echo '<div style="position:relative;float:left;"><a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a><h4><div style="position: absolute;width:400px;height:40px;bottom:0px;background-color:black;opacity:0.5;color:#f1f1f1;">'.$value['username'].'</h4></div></div>';
               }
             }
             catch(PDOException $e)
-              {
+            {
               echo "Error: " . $e->getMessage();
-              }
+            }
         ?>
 
   </body>

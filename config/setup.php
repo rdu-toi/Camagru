@@ -1,9 +1,6 @@
 <?php
-$DB_DSN = "mysql:host=localhost;dbname=".$DB_NAME;
-$DB_DSN_SHORT = "mysql:host=localhost";
-$DB_NAME = "Camagru";
-$DB_USER = "root";
-$DB_PASSWORD = "Camagru";
+
+include 'database.php';
 
 //Create database "Camagru"
 
@@ -29,9 +26,10 @@ try {
     $sql = "CREATE TABLE `User_info` (
         `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         `username` VARCHAR(30) NOT NULL,
-        `password` VARCHAR(30) NOT NULL,
+        `password` VARCHAR(255) NOT NULL,
         `email` VARCHAR(50),
-        `reg_date` TIMESTAMP
+        `token` VARCHAR(255),
+        `status` INT NOT NULL DEFAULT '0'
     )";
 
     $conn->exec($sql);
@@ -53,6 +51,7 @@ try {
     $sql = "CREATE TABLE `Gallery` (
         `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         `userid` INT(100) NOT NULL,
+        `username` VARCHAR(30),
         `name` VARCHAR(100) NOT NULL,
         FOREIGN KEY (userid) REFERENCES User_info(id)
     )";
@@ -67,24 +66,28 @@ catch(PDOException $e)
 
 $conn = null;
 
-// //Create table "Comments"
+//Create table "Comments"
 
-// try {
-//     $conn = new PDO("$DB_DSN_SHORT;dbname=$DB_NAME", $DB_USER, $DB_PASSWORD);
-//     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+try {
+    $conn = new PDO("$DB_DSN_SHORT;dbname=$DB_NAME", $DB_USER, $DB_PASSWORD);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-//     $sql = "CREATE TABLE Comments (
-//     )";
+    $sql = "CREATE TABLE Comments (
+        `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        `photoid` INT(100) NOT NULL,
+        `username` VARCHAR(30) NOT NULL,
+        `comment` VARCHAR(300)
+    )";
 
-//     $conn->exec($sql);
-//     echo "Table Comments created successfully";
-//     }
-// catch(PDOException $e)
-//     {
-//     echo $sql . "<br>" . $e->getMessage();
-//     }
+    $conn->exec($sql);
+    echo "Table Comments created successfully";
+    }
+catch(PDOException $e)
+    {
+    echo $sql . "<br>" . $e->getMessage();
+    }
 
-// $conn = null;
+$conn = null;
 
 // //Create table "Likes"
 

@@ -19,15 +19,15 @@
         choose.forEach(function(element){
             element.addEventListener("click",function(){
             img = element;
-            console.log(img.src);
         });
     });}
-
+    
     chooseimg();
+
     document.getElementById("snap").addEventListener("click", function() {
         context.drawImage(video, 0, 0, 400, 300);
         if (img){
-            if (img.src == "http://localhost:8080/Camagru_v2/img/1.png"){
+            if (img.src === "http://localhost:8080/Camagru_v2/img/1.png"){
                 context.drawImage(img, 75, 25, 250, 250);
             }
             else if (img.src === "http://localhost:8080/Camagru_v2/img/2.png"){
