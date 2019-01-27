@@ -1,6 +1,6 @@
 <?php
 
-include('includes/database.php');
+include('config/database.php');
 
 if (isset($_GET['token'])){
 	try {

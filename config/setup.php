@@ -52,7 +52,7 @@ try {
         `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         `userid` INT(100) NOT NULL,
         `username` VARCHAR(30),
-        `name` VARCHAR(100) NOT NULL,
+        `photo` MEDIUMTEXT NOT NULL,
         FOREIGN KEY (userid) REFERENCES User_info(id)
     )";
 
@@ -88,23 +88,3 @@ catch(PDOException $e)
     }
 
 $conn = null;
-
-// //Create table "Likes"
-
-// try {
-//     $conn = new PDO("$DB_DSN_SHORT;dbname=$DB_NAME", $DB_USER, $DB_PASSWORD);
-//     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-//     $sql = "CREATE TABLE Likes (
-//     )";
-
-//     $conn->exec($sql);
-//     echo "Table Likes created successfully";
-//     }
-// catch(PDOException $e)
-//     {
-//     echo $sql . "<br>" . $e->getMessage();
-//     }
-
-// $conn = null;
-?>

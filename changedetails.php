@@ -146,7 +146,7 @@ if (isset($_POST['register'])){
 
     <div class="container">
         <form action="register.php" method="post" style="margin-top:35px;" >
-            <h2>Register Here</h2>
+            <h2>Change Details</h2>
 
 			<?php if(isset($_GET['err'])) { ?>
 
