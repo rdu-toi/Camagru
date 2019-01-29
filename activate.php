@@ -14,4 +14,8 @@ if (isset($_GET['token'])){
 		echo "Error: " . $e->getMessage();
 		}
 	}
+else {
+	header("Location:index.php?err=There is a technical problem, we are trying to sort it out now!");
+	exit();
+}
 ?>

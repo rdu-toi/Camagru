@@ -7,10 +7,13 @@ if(isset($_POST['send_my_password'])){
 	$query = "SELECT * FROM `user_info` WHERE `email` = '$email'";
 	$result = $conn->query($query);
 	if ($row = $result->fetch(PDO::FETCH_ASSOC)){
-    $password = $row['password'];
 
-    if(mail($email, 'Your Password!', "Your password is: $password", 'From: rdu-toi@student.wethinkcode.co.za')){
-      header("Location:index.php?success=" . urlencode("Your password has been sent to your email!"));
+    // $password = $row['password'];
+
+    $name = $row['username'];
+    $token = $row['token'];
+    if(mail($email, 'Update Password!', "Hi, $name. To change your password click on this link: http://localhost:8080/Camagru_v2/change_password.php?token=$token", 'From: rdu-toi@student.wethinkcode.co.za')){
+      header("Location:index.php?success=" . urlencode("To change your password, check the link in your email!"));
       exit();
     } else {
       header("Location:forgot_password.php?err=" . urlencode("Sorry, we could not send your password at this time!"));
