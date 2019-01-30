@@ -9,13 +9,6 @@ if(!loggedIn()){
     exit();
 }
 
-if (isset($_SESSION['id'])){
-    $id = $_SESSION['id'];
-}
-else {
-    $_SESSION['id'] = $id;
-}
-
 $idstr = $_GET['id'];
 $id = (int)$idstr;
 
@@ -73,17 +66,9 @@ if (isset($_POST['submitcomment'])){
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-          <?php
-            if(loggedIn()){
-                echo '<li><a href="logout.php">Logout</a></li>';
-                echo '<li><a href="myaccount.php">My Account</a></li>';
-                echo '<li><a href="gallery.php">Gallery</a></li>';
-            }
-            else {
-                echo '<li><a href="index.php">Login</a></li>';
-                echo '<li><a href="register.php">Register</a></li>';
-            }
-            ?>
+            <li><a href="logout.php">Logout</a></li>
+            <li><a href="myaccount.php">My Account</a></li>
+            <li><a href="gallery.php">Gallery</a></li>
           </ul>
         </div>
       </div>
@@ -99,7 +84,6 @@ if (isset($_POST['submitcomment'])){
                 else if(isset($_COOKIE['user_email'])){
                     echo $_COOKIE['user_email'];
                 }
-                else echo 'Guest';
             }?>
             </h2>
         </div>
