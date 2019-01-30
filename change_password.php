@@ -11,67 +11,42 @@ if(loggedIn()){
 }
 
 if (isset($_GET['token'])){
-	try {
-        $token = $_GET['token'];
-        $stmt = $conn->prepare("SELECT * FROM `user_info` WHERE `token` = $token");
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$row){
-            echo "My name is Jeff!";
-            // header("Location:index.php?err=" .urlencode("Something went wrong!"));
-            // exit();
-        }
-	}
-	catch(PDOException $e){
-		echo "Error: " . $e->getMessage();
-	}
-}
-else {
-	header("Location:index.php?err=" .urlencode("There is a technical problem, we are trying to sort it out now!"));
-	exit();
+  $_SESSION['token'] = $_GET['token'];
 }
 
-if (isset($_POST['register'])){
+$token = $_SESSION['token'];
+
+if (isset($_POST['confirm'])){
 	$_SESSION['password'] = $_POST['password'];
 	$_SESSION['confirm_password'] = $_POST['confirm_password'];
 
 	if ($_POST['password'] != $_POST['confirm_password']){
-		header("Location:register.php?err=" . urlencode("The passwords do not match!"));
+		header("Location:change_password.php?err=" . urlencode("The passwords do not match!"));
     exit();
   }
 	
 	else if ( strlen( $_POST['password'] ) < 8 ) {
-		header("Location:register.php?err=" . urlencode("The password needs to be atleast 8 characters long!"));
-		exit();
-	}
-
-	else if ( $_POST['password'] == $_POST['name'] ) {
-		header("Location:register.php?err=" . urlencode("The password cannot match your username!"));
-		exit();
-	}
-
-	else if ( strpos( $_POST['password'], $_POST['name'] ) !== false ) {
-		header("Location:register.php?err=" . urlencode("The password cannot match your username!"));
+		header("Location:change_password.php?err=" . urlencode("The password needs to be atleast 8 characters long!"));
 		exit();
 	}
 
 	else if ( ! preg_match( '/[a-z]/', $_POST['password'] ) ) {
-		header("Location:register.php?err=" . urlencode("The passwords needs atleast one lowercase letter!"));
+		header("Location:change_password.php?err=" . urlencode("The passwords needs atleast one lowercase letter!"));
 		exit();
 	}
 
 	else if ( ! preg_match( '/[A-Z]/', $_POST['password'] ) ) {
-		header("Location:register.php?err=" . urlencode("The passwords needs atleast one uppercase letter!"));
+		header("Location:change_password.php?err=" . urlencode("The passwords needs atleast one uppercase letter!"));
 		exit();
 	}
 
 	else if ( ! preg_match( '/[0-9]/', $_POST['password'] ) ) {
-		header("Location:register.php?err=" . urlencode("The passwords needs atleast one number!"));
+		header("Location:change_password.php?err=" . urlencode("The passwords needs atleast one number!"));
 		exit();
 	}
 
 	else if ( ! preg_match( '/[\W]/', $_POST['password'] ) ) {
-		header("Location:register.php?err=" . urlencode("The passwords needs atleast one special character!"));
+		header("Location:change_password.php?err=" . urlencode("The passwords needs atleast one special character!"));
 		exit();
 	}
 
@@ -79,7 +54,7 @@ if (isset($_POST['register'])){
 		try {
         $password = $_POST['password'];
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("UPDATE `user_info` SET `password` = '$hashed_password' where `token` = '$token'");
+        $stmt = $conn->prepare("UPDATE `user_info` SET `password` = '$hashed_password' WHERE `token` = '$token'");
         $stmt->execute();
         $stmt = null;
         header("Location:index.php?success=" . urlencode("Your password has been successfully updated!"));
@@ -122,7 +97,7 @@ if (isset($_POST['register'])){
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="index.php">Login</a></li>
-            <li class="active"><a href="register.php">Register</a></li>
+            <li><a href="register.php">Register</a></li>
           </ul>
         </div>
       </div>

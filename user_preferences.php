@@ -5,8 +5,8 @@ session_start();
 include('config/database.php');
 include('config/functions.php');
 
-if(loggedIn()){
-  header("Location:myaccount.php");
+if(!loggedIn()){
+  header("Location:index.php");
   exit();
 }
 

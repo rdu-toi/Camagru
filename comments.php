@@ -9,7 +9,11 @@ if(!loggedIn()){
     exit();
 }
 
-$idstr = $_GET['id'];
+if (isset($_GET['id'])){
+  $_SESSION['id'] = $_GET['id'];
+}
+
+$idstr = $_SESSION['id'];
 $id = (int)$idstr;
 
 $useremail = $_SESSION['user_email'];

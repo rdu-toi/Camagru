@@ -64,7 +64,7 @@ if(isset($_POST['send_my_password'])){
 
     <div class="container">
         <form action="forgot_password.php" method="post" style="margin-top:35px;" >
-        <h2>Retrieve Password</h2>
+        <h2>Reset Password</h2>
 
 			<?php if(isset($_GET['success'])) { ?>
 
