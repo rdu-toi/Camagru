@@ -38,6 +38,7 @@ include('config/functions.php');
             if(loggedIn()){
                 echo '<li><a href="logout.php">Logout</a></li>';
                 echo '<li><a href="myaccount.php">My Account</a></li>';
+                echo '<li><a href="user_preferences.php">User Preferences</a></li>';
             }
             else {
                 echo '<li><a href="index.php">Login</a></li>';
@@ -77,13 +78,17 @@ include('config/functions.php');
 
     <?php } ?>
     </br>
+    <div>
         <?php
             try {
-              $results = $conn->prepare("SELECT * FROM `gallery`");
+              $results = $conn->prepare("SELECT * FROM `gallery` ORDER by id DESC");
               $results->execute();
               $rows = $results->fetchAll();
               foreach($rows as $key => $value){
-                echo '<div style="position:relative;float:left;"><a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a><h4><div style="position: absolute;width:400px;height:40px;bottom:0px;background-color:black;opacity:0.5;color:#f1f1f1;">'.$value['username'].'</h4></div></div>';
+                $page = $_GET['page'];
+                if ($key <= $page * 5 && $key >= ($page * 5 - 4)){
+                  echo '<div style="position:relative;float:left;"><a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a><h4><div style="position: absolute;width:400px;height:40px;bottom:0px;background-color:black;opacity:0.5;color:#f1f1f1;">'.$value['username'].'</h4></div></div>';
+                }
               }
             }
             catch(PDOException $e)
@@ -91,6 +96,18 @@ include('config/functions.php');
               echo "Error: " . $e->getMessage();
             }
         ?>
+    </div>
+    <div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="gallery.php?page=previous">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="gallery.php?page=1">1</a></li>
+            <li class="page-item"><a class="page-link" href="gallery.php?page=2">2</a></li>
+            <li class="page-item"><a class="page-link" href="gallery.php?page=3">3</a></li>
+            <li class="page-item"><a class="page-link" href="gallery.php?page=next">Next</a></li>
+          </ul>
+        </nav>
+    </div>
 
   </body>
 </html>

@@ -71,6 +71,7 @@ if (isset($_POST['submit'])){
           <ul class="nav navbar-nav">
             <li><a href="logout.php">Logout</a></li>
             <li><a href="gallery.php">Gallery</a></li>
+            <li><a href="user_preferences.php">User Preferences</a></li>
           </ul>
         </div>
       </div>

@@ -6,7 +6,7 @@ include('config/database.php');
 include('config/functions.php');
 
 if(!loggedIn()){
-  header("Location:index.php");
+  header("Location:index.php?err=" .urlencode("You are not logged in!"));
   exit();
 }
 
@@ -26,77 +26,101 @@ function isUnique($email){
 	}
 }
 
-if (isset($_POST['register'])){
-	$_SESSION['name'] = $_POST['name'];
-	$_SESSION['email'] = $_POST['email'];
-	$_SESSION['password'] = $_POST['password'];
-	$_SESSION['confirm_password'] = $_POST['confirm_password'];
-
+if (isset($_POST['submit'])){
 	if (strlen($_POST['name']) < 3){
-		header("Location:register.php?err=" . urlencode("The name must be at least 3 characters long!"));
+		header("Location:user_preferences.php?err=" . urlencode("The name must be at least 3 characters long!"));
 		exit();
 	}
 	else if ($_POST['password'] != $_POST['confirm_password']){
-		header("Location:register.php?err=" . urlencode("The passwords do not match!"));
+		header("Location:user_preferences.php?err=" . urlencode("The passwords do not match!"));
     exit();
   }
 	
 	else if ( strlen( $_POST['password'] ) < 8 ) {
-		header("Location:register.php?err=" . urlencode("The password needs to be atleast 8 characters long!"));
+		header("Location:user_preferences.php?err=" . urlencode("The password needs to be atleast 8 characters long!"));
 		exit();
 	}
 
 	else if ( $_POST['password'] == $_POST['name'] ) {
-		header("Location:register.php?err=" . urlencode("The password cannot match your username!"));
+		header("Location:user_preferences.php?err=" . urlencode("The password cannot match your username!"));
 		exit();
 	}
 
 	else if ( strpos( $_POST['password'], $_POST['name'] ) !== false ) {
-		header("Location:register.php?err=" . urlencode("The password cannot match your username!"));
+		header("Location:user_preferences.php?err=" . urlencode("The password cannot match your username!"));
 		exit();
 	}
 
 	else if ( ! preg_match( '/[a-z]/', $_POST['password'] ) ) {
-		header("Location:register.php?err=" . urlencode("The passwords needs atleast one lowercase letter!"));
+		header("Location:user_preferences.php?err=" . urlencode("The passwords needs atleast one lowercase letter!"));
 		exit();
 	}
 
 	else if ( ! preg_match( '/[A-Z]/', $_POST['password'] ) ) {
-		header("Location:register.php?err=" . urlencode("The passwords needs atleast one uppercase letter!"));
+		header("Location:user_preferences.php?err=" . urlencode("The passwords needs atleast one uppercase letter!"));
 		exit();
 	}
 
 	else if ( ! preg_match( '/[0-9]/', $_POST['password'] ) ) {
-		header("Location:register.php?err=" . urlencode("The passwords needs atleast one number!"));
+		header("Location:user_preferences.php?err=" . urlencode("The passwords needs atleast one number!"));
 		exit();
 	}
 
 	else if ( ! preg_match( '/[\W]/', $_POST['password'] ) ) {
-		header("Location:register.php?err=" . urlencode("The passwords needs atleast one special character!"));
+		header("Location:user_preferences.php?err=" . urlencode("The passwords needs atleast one special character!"));
 		exit();
 	}
 
   else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-    header("Location:register.php?err=" . urlencode("Please enter a valid email!"));
+    header("Location:user_preferences.php?err=" . urlencode("Please enter a valid email!"));
     exit();
-  }
-	else if (!isUnique($_POST['email'])){
-		header("Location:register.php?err=" . urlencode("The email is already in use. Please use another or sign in using this email!"));
-		exit();
 	}
+	
+	// else if (!isUnique($_POST['email'])){
+	// 	header("Location:user_preferences.php?err=" . urlencode("The email is already in use. Please use another or sign in using this email!"));
+	// 	exit();
+	// }
+
 	else {
 		try {
 			$name = $_POST['name'];
       $password = $_POST['password'];
       $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 			$email = $_POST['email'];
-			$token = bin2hex(openssl_random_pseudo_bytes(32));
+			$user_email = $_SESSION['user_email'];
 
-			$stmt = $conn->prepare("INSERT INTO `user_info` (`username`, `password`, `email`, `token`) VALUES ('$name', '$hashed_password', '$email', '$token')");
+			$query = "SELECT * FROM `user_info` WHERE `email` = '$user_email'";
+			$result = $conn->query($query);
+			$row = $result->fetch(PDO::FETCH_ASSOC);
+			$token = $row['token'];
+			$username = $row['username'];
+
+			$stmt = $conn->prepare( "UPDATE `user_info` SET STATUS='0' WHERE `token`='$token'" );
+			$stmt->execute();
+			$stmt = null;
+
+			$stmt = $conn->prepare( "UPDATE `gallery` SET `username` = '$name' WHERE `username`='$username'" );
+			$stmt->execute();
+			$stmt = null;
+
+			$stmt = $conn->prepare( "UPDATE `comments` SET `username` = '$name' WHERE `username`='$username'" );
+			$stmt->execute();
+			$stmt = null;
+
+			$stmt = $conn->prepare("UPDATE `user_info` SET `username` = '$name', `password` = '$hashed_password', `email` = '$email' WHERE `email` = '$user_email'");
 			$stmt->execute();
       $stmt = null;
-      $message = "Hi $name! Your account has been created, here is the activation link http://localhost:8080/Camagru_v2/activate.php?token=$token";
-      mail($email, 'Activate Account', $message, 'From: rdu-toi@student.wethinkcode.co.za');
+      $message = "Hi $name! You have successfully changed your details, here is the activation link http://localhost:8080/Camagru_v2/activate.php?token=$token";
+			mail($email, 'Activate Account', $message, 'From: rdu-toi@student.wethinkcode.co.za');
+
+			session_destroy();
+			
+			setcookie("user_email", "", time()-60*5);
+			
+
+// Add in portion to change username in comments and gallery for user's related username change!
+
+
       header("Location:index.php?success=" . urlencode("Activation email sent"));
       exit();
 			}
@@ -116,7 +140,7 @@ if (isset($_POST['register'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Register</title>
+    <title>Change Details</title>
 
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -137,15 +161,16 @@ if (isset($_POST['register'])){
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="index.php">Login</a></li>
-            <li class="active"><a href="register.php">Register</a></li>
+            <li><a href="logout.php">Logout</a></li>
+            <li><a href="gallery.php">Gallery</a></li>
+            <li><a href="myaccount.php">My Account</a></li>
           </ul>
         </div>
       </div>
     </nav>
 
     <div class="container">
-        <form action="register.php" method="post" style="margin-top:35px;" >
+        <form action="user_preferences.php" method="post" style="margin-top:35px;" >
             <h2>Change Details</h2>
 
 			<?php if(isset($_GET['err'])) { ?>
@@ -157,21 +182,21 @@ if (isset($_POST['register'])){
             <hr>
             <div class="form-group">
                 <label>Name</label>
-                <input type="text" name="name" class="form-control" placeholder="Name" value="<?php echo @$_SESSION['name']; ?>" required>
+                <input type="text" name="name" class="form-control" placeholder="Name" value="" required>
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Email address</label>
-                <input type="email" name="email" class="form-control" placeholder="Email" value="<?php echo @$_SESSION['email']; ?>" required>
+                <input type="email" name="email" class="form-control" placeholder="Email" value="" required>
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Password" value="<?php echo @$_SESSION['password']; ?>" required>
+                <input type="password" name="password" class="form-control" placeholder="Password" value="" required>
             </div>
             <div class="form-group">
                 <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" value="<?php echo @$_SESSION['confirm_password']; ?>" required>
+                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" value="" required>
             </div>
-            <button type="submit" name="register" class="btn btn-default">Register</button>
+            <button type="submit" name="submit" class="btn btn-default">Save</button>
         </form>
 
     </div>

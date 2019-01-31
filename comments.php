@@ -73,6 +73,7 @@ if (isset($_POST['submitcomment'])){
             <li><a href="logout.php">Logout</a></li>
             <li><a href="myaccount.php">My Account</a></li>
             <li><a href="gallery.php">Gallery</a></li>
+            <li><a href="user_preferences.php">User Preferences</a></li>
           </ul>
         </div>
       </div>
