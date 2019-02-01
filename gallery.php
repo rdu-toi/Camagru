@@ -4,6 +4,18 @@ session_start();
 include('config/database.php');
 include('config/functions.php');
 
+function paginate($num){
+  $counter = 1;
+  $pages = intdiv($num, 5);
+  if ($num % 5 > 0){
+    $pages = $pages + 1;
+  }
+  while($counter <= $pages){
+    echo '<li class="page-item"><a class="page-link" href="gallery.php?page='.$counter.'">'.$counter.'</a></li>';
+    $counter = $counter + 1;
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -84,9 +96,13 @@ include('config/functions.php');
               $results = $conn->prepare("SELECT * FROM `gallery` ORDER by id DESC");
               $results->execute();
               $rows = $results->fetchAll();
+              $count = $results->rowCount();
               foreach($rows as $key => $value){
-                $page = $_GET['page'];
-                if ($key <= $page * 5 && $key >= ($page * 5 - 4)){
+                if (isset($_GET['page'])){
+                  $page = $_GET['page'];
+                }
+                else $page = 1;
+                if ($key <= ($page * 5) - 1 && $key >= ($page * 5 - 5)){
                   echo '<div style="position:relative;float:left;"><a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a><h4><div style="position: absolute;width:400px;height:40px;bottom:0px;background-color:black;opacity:0.5;color:#f1f1f1;">'.$value['username'].'</h4></div></div>';
                 }
               }
@@ -100,11 +116,9 @@ include('config/functions.php');
     <div>
         <nav aria-label="Page navigation example">
           <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="gallery.php?page=previous">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="gallery.php?page=1">1</a></li>
-            <li class="page-item"><a class="page-link" href="gallery.php?page=2">2</a></li>
-            <li class="page-item"><a class="page-link" href="gallery.php?page=3">3</a></li>
-            <li class="page-item"><a class="page-link" href="gallery.php?page=next">Next</a></li>
+          <?php
+            paginate($count);
+          ?>
           </ul>
         </nav>
     </div>
