@@ -90,7 +90,7 @@ function paginate($num){
 
     <?php } ?>
     </br>
-    <div>
+    <div position="relative">
         <?php
             try {
               $results = $conn->prepare("SELECT * FROM `gallery` ORDER by id DESC");
@@ -103,7 +103,10 @@ function paginate($num){
                 }
                 else $page = 1;
                 if ($key <= ($page * 5) - 1 && $key >= ($page * 5 - 5)){
-                  echo '<div style="position:relative;float:left;"><a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a><h4><div style="position: absolute;width:400px;height:40px;bottom:0px;background-color:black;opacity:0.5;color:#f1f1f1;">'.$value['username'].'</h4></div></div>';
+                  echo '<div style="position:relative;float:left;">
+                          <a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a>
+                          <h4><div style="position: absolute;width:400px;height:40px;bottom:0px;background-color:black;opacity:0.5;color:#f1f1f1;">'.$value['username'].'</h4></div>
+                        </div>';
                 }
               }
             }
@@ -113,7 +116,7 @@ function paginate($num){
             }
         ?>
     </div>
-    <div>
+    <div position="absolute">
         <nav aria-label="Page navigation example">
           <ul class="pagination">
           <?php
