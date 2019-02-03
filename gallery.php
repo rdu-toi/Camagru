@@ -16,6 +16,26 @@ function paginate($num){
   }
 }
 
+function delete($id){
+  try {
+    $email = $_SESSION['user_email'];
+    $query = "SELECT * FROM `user_info` WHERE `email` = '$email' AND `id` = $id";
+    $result = $conn->query($query);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    if ($row){
+      echo '
+      <a style="float:right; margin-right: 10px" href="#" class="btn btn-primary a-btn-slide-text">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      <span><strong>Delete</strong></span>            
+      </a>';
+    }
+  }
+  catch(PDOException $e)
+    {
+    echo "Error: " . $e->getMessage();
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -89,8 +109,8 @@ function paginate($num){
         <div class="alert alert-danger"><?php echo $_GET['err']; ?></div>
 
     <?php } ?>
-    </br>
-    <div position="relative">
+    <br>
+    <div>
         <?php
             try {
               $results = $conn->prepare("SELECT * FROM `gallery` ORDER by id DESC");
@@ -105,7 +125,13 @@ function paginate($num){
                 if ($key <= ($page * 5) - 1 && $key >= ($page * 5 - 5)){
                   echo '<div style="position:relative;float:left;">
                           <a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a>
-                          <h4><div style="position: absolute;width:400px;height:40px;bottom:0px;background-color:black;opacity:0.5;color:#f1f1f1;">'.$value['username'].'</h4></div>
+                          <div style="position: absolute;width:400px;height:40px;bottom:0px;;color:#f1f1f1;"><h4 style="display:inline-block";>'.$value['username'].'</h4>';
+                          delete($value['id']);
+                              echo '<a style="float:right; margin-right: 10px" href="#" class="btn btn-primary a-btn-slide-text">
+                              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                              <span><strong>Like</strong></span>            
+                              </a>
+                          </div>
                         </div>';
                 }
               }
@@ -115,8 +141,9 @@ function paginate($num){
               echo "Error: " . $e->getMessage();
             }
         ?>
+        <br>
     </div>
-    <div position="absolute">
+    <div>
         <nav aria-label="Page navigation example">
           <ul class="pagination">
           <?php
