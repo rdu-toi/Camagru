@@ -18,20 +18,13 @@ $id = (int)$idstr;
 
 $useremail = $_SESSION['user_email'];
 
-if (isset($_POST['submitcomment'])){
+if (isset($_POST['confirm'])){
     try {
-        $comment = $_POST['comment'];
-
-        $query = $conn->prepare("SELECT * FROM `user_info` WHERE `email` = '$useremail'");
-        $query->execute();
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        foreach($result as $key => $row){
-          $stmt = $conn->prepare("INSERT INTO `comments` (`photoid`, `username`, `comment`) VALUES ('$id', :username, '$comment')");
-          $stmt->bindValue(':username', $row['username']);
-          $stmt->execute();
-          $stmt = null;
-        }
-        header("Location:gallery.php?success=" . urlencode("Comment submitted!"));
+        $stmt = $conn->prepare("DELETE FROM `gallery` WHERE `id` = :id");
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+        $stmt = null;
+        header("Location:gallery.php?success=" . urlencode("Image successfully deleted!"));
         exit();
         }
     catch(PDOException $e)
@@ -102,7 +95,11 @@ if (isset($_POST['submitcomment'])){
                 $rows = $results->fetchAll(PDO::FETCH_ASSOC);
                 foreach($rows as $key => $value){
                   echo '<img src="'.$value['photo'].'" width="400" height="300";/>
-                  <form action="comments.php" method="post";><textarea rows="5" cols="48" name="comment" required placeholder="Leave a comment here!";></textarea><button type="submit" class="btn btn-default" name="submitcomment">Submit Comment</button></form></div>';
+                  <form action="delete.php" method="post";>
+                  <div style="color:#f1f1f1;">
+                  <h4>Are you sure you want to delete this image?</h4>
+                  </div>
+                  <button type="submit" class="btn btn-default" name="confirm">Confirm</button></form></div>';
                 }
             }
               catch(PDOException $e)

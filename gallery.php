@@ -16,24 +16,29 @@ function paginate($num){
   }
 }
 
-function delete($id){
-  try {
-    $email = $_SESSION['user_email'];
-    $query = "SELECT * FROM `user_info` WHERE `email` = '$email' AND `id` = $id";
-    $result = $conn->query($query);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    if ($row){
-      echo '
-      <a style="float:right; margin-right: 10px" href="#" class="btn btn-primary a-btn-slide-text">
-      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-      <span><strong>Delete</strong></span>            
-      </a>';
-    }
+function like($value){
+  
+}
+
+function delete($value, $row){
+  if ($value['userid'] === $row['id']){
+    echo '
+    <a style="float:right; margin-right: 10px" href="delete.php?id='.$value['id'].'" class="btn btn-primary a-btn-slide-text">
+    <span><strong>Delete</strong></span>            
+    </a>';
+    echo '
+    <a style="float:right; margin-right: 10px" href="comments.php?id='.$value['id'].'" class="btn btn-primary a-btn-slide-text">
+    <span><strong>Comment</strong></span>            
+    </a>';
   }
-  catch(PDOException $e)
-    {
-    echo "Error: " . $e->getMessage();
-    }
+  else{
+    echo '
+    <button onclick="like($value)">
+      <a style="float:right; margin-right: 10px" class="btn btn-primary a-btn-slide-text">
+        <span><strong>Like</strong></span>            
+      </a>
+    </button>';
+  }
 }
 
 ?>
@@ -113,6 +118,11 @@ function delete($id){
     <div>
         <?php
             try {
+              $email = $_SESSION['user_email'];
+              $query = "SELECT * FROM `user_info` WHERE `email` = '$email'";
+              $result = $conn->query($query);
+              $row = $result->fetch(PDO::FETCH_ASSOC);
+
               $results = $conn->prepare("SELECT * FROM `gallery` ORDER by id DESC");
               $results->execute();
               $rows = $results->fetchAll();
@@ -124,14 +134,13 @@ function delete($id){
                 else $page = 1;
                 if ($key <= ($page * 5) - 1 && $key >= ($page * 5 - 5)){
                   echo '<div style="position:relative;float:left;">
-                          <a href="comments.php?id='.$value['id'].'"><img src="'.$value['photo'].'"/></a>
-                          <div style="position: absolute;width:400px;height:40px;bottom:0px;;color:#f1f1f1;"><h4 style="display:inline-block";>'.$value['username'].'</h4>';
-                          delete($value['id']);
-                              echo '<a style="float:right; margin-right: 10px" href="#" class="btn btn-primary a-btn-slide-text">
-                              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                              <span><strong>Like</strong></span>            
-                              </a>
-                          </div>
+                          <img src="'.$value['photo'].'"/>
+                          <div style="position: absolute;width:400px;height:40px;bottom:0px;;color:#f1f1f1;">
+                          <h4 style="display:inline-block; margin-left:6px">'.$value['username'].'</h4>';
+                  if (loggedIn()){
+                    delete($value, $row);
+                  }
+                  echo '</div>
                         </div>';
                 }
               }

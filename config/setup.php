@@ -76,7 +76,8 @@ try {
         `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         `photoid` INT(100) NOT NULL,
         `username` VARCHAR(30) NOT NULL,
-        `comment` VARCHAR(300)
+        `comment` VARCHAR(300),
+        `likes` MEDIUMINT NOT NULL
     )";
 
     $conn->exec($sql);
