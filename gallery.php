@@ -17,7 +17,8 @@ function paginate($num){
 }
 
 function like($value){
-  
+  header("Location:gallery.php?userid='.$value['userid'].'");
+  exit();
 }
 
 function delete($value, $row){
@@ -33,11 +34,9 @@ function delete($value, $row){
   }
   else{
     echo '
-    <button onclick="like($value)">
-      <a style="float:right; margin-right: 10px" class="btn btn-primary a-btn-slide-text">
-        <span><strong>Like</strong></span>            
-      </a>
-    </button>';
+    <p style="float:right; margin-right: 10px" class="btn btn-primary a-btn-slide-text" onclick="like('.$value.')">
+      <span><strong>Like</strong></span>            
+    </p>';
   }
 }
 
