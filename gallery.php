@@ -16,10 +16,11 @@ function paginate($num){
   }
 }
 
-function like($value){
-  header("Location:gallery.php?userid='.$value['userid'].'");
-  exit();
-}
+//      Fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// function like($value){
+//   header("Location:gallery.php?userid='.$value['userid'].'");
+//   exit();
+// }
 
 function delete($value, $row){
   if ($value['userid'] === $row['id']){

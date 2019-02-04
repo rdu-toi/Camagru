@@ -10,6 +10,8 @@ if(!loggedIn()){
   exit();
 }
 
+$user_email = $_SESSION['user_email'];
+
 function isUnique($email){
 	global $conn;
 	$query = $conn->prepare( "SELECT * FROM `user_info` WHERE `email` = '$email'" );
@@ -24,6 +26,31 @@ function isUnique($email){
 		$query = null;
 		return true;
 	}
+}
+
+function comemail(){
+	try {
+			$query = "SELECT * FROM `user_info` WHERE `email` = '$user_email'";
+			$result = $conn->query($query);
+			$row = $result->fetch(PDO::FETCH_ASSOC);
+			if ($row['comemail'] === 0){
+				$query = $conn->prepare( "UPDATE `user_info` SET `comemail`='1' WHERE `email`='$email'" );
+				$query->execute();
+				echo '<button type="submit" name="enable" class="btn btn-default">Enable email notification for comments</button>';
+				header("Location:index.php?success=" . urlencode("You will not recieve emails for comments!"));
+				exit();
+			}
+			else{
+				$query = $conn->prepare( "UPDATE `user_info` SET `comemail`='0' WHERE `email`='$email'" );
+				$query->execute();
+				echo '<button type="submit" name="disable" class="btn btn-default">Disable email notification for comments</button>';
+				header("Location:index.php?success=" . urlencode("You will now recieve emails for comments!"));
+				exit();
+			}
+	}
+	catch(PDOException $e){
+			echo "Error: " . $e->getMessage();
+			}
 }
 
 if (isset($_POST['submit'])){
@@ -75,11 +102,6 @@ if (isset($_POST['submit'])){
     header("Location:user_preferences.php?err=" . urlencode("Please enter a valid email!"));
     exit();
 	}
-	
-	// else if (!isUnique($_POST['email'])){
-	// 	header("Location:user_preferences.php?err=" . urlencode("The email is already in use. Please use another or sign in using this email!"));
-	// 	exit();
-	// }
 
 	else {
 		try {
@@ -87,7 +109,6 @@ if (isset($_POST['submit'])){
       $password = $_POST['password'];
       $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 			$email = $_POST['email'];
-			$user_email = $_SESSION['user_email'];
 
 			$query = "SELECT * FROM `user_info` WHERE `email` = '$user_email'";
 			$result = $conn->query($query);
@@ -116,10 +137,6 @@ if (isset($_POST['submit'])){
 			session_destroy();
 			
 			setcookie("user_email", "", time()-60*5);
-			
-
-// Add in portion to change username in comments and gallery for user's related username change!
-
 
       header("Location:index.php?success=" . urlencode("Activation email sent"));
       exit();
@@ -197,6 +214,10 @@ if (isset($_POST['submit'])){
                 <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" value="" required>
             </div>
             <button type="submit" name="submit" class="btn btn-default">Save</button>
+						<br>
+						<?php
+							comemail();
+						?>
         </form>
 
     </div>
