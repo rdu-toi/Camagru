@@ -29,7 +29,8 @@ try {
         `password` VARCHAR(255) NOT NULL,
         `email` VARCHAR(50),
         `token` VARCHAR(255),
-        `status` INT NOT NULL DEFAULT '0'
+        `status` INT NOT NULL DEFAULT '0',
+        `comemail` INT NOT NULL DEFAULT '0'
     )";
 
     $conn->exec($sql);
@@ -53,6 +54,7 @@ try {
         `userid` INT(100) NOT NULL,
         `username` VARCHAR(30),
         `photo` MEDIUMTEXT NOT NULL,
+        `likes` MEDIUMINT NOT NULL DEFAULT '0',
         FOREIGN KEY (userid) REFERENCES User_info(id)
     )";
 
@@ -77,7 +79,6 @@ try {
         `photoid` INT(100) NOT NULL,
         `username` VARCHAR(30) NOT NULL,
         `comment` VARCHAR(300),
-        `likes` MEDIUMINT NOT NULL
     )";
 
     $conn->exec($sql);

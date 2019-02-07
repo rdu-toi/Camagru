@@ -33,7 +33,11 @@ if (isset($_POST['register'])){
 	$_SESSION['confirm_password'] = $_POST['confirm_password'];
 
 	if (strlen($_POST['name']) < 3){
-		header("Location:register.php?err=" . urlencode("The name must be at least 3 characters long!"));
+		header("Location:register.php?err=" . urlencode("The name must be between 3 and 15 characters long!"));
+		exit();
+	}
+	else if (strlen($_POST['name']) > 15){
+		header("Location:register.php?err=" . urlencode("The name must be between 3 and 15 characters long!"));
 		exit();
 	}
 	else if ($_POST['password'] != $_POST['confirm_password']){

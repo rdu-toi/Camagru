@@ -16,12 +16,6 @@ function paginate($num){
   }
 }
 
-//      Fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// function like($value){
-//   header("Location:gallery.php?userid='.$value['userid'].'");
-//   exit();
-// }
-
 function delete($value, $row){
   if ($value['userid'] === $row['id']){
     echo '
@@ -35,9 +29,9 @@ function delete($value, $row){
   }
   else{
     echo '
-    <p style="float:right; margin-right: 10px" class="btn btn-primary a-btn-slide-text" onclick="like('.$value.')">
+    <a style="float:right; margin-right: 10px" target="iframe_a" class="btn btn-primary a-btn-slide-text" href="like.php?id='.$value['id'].'">
       <span><strong>Like</strong></span>            
-    </p>';
+    </a>';
   }
 }
 
@@ -133,10 +127,10 @@ function delete($value, $row){
                 }
                 else $page = 1;
                 if ($key <= ($page * 5) - 1 && $key >= ($page * 5 - 5)){
-                  echo '<div style="position:relative;float:left;">
+                  echo '<div style="position:relative;float:left;margin:10px;border:3px solid black;">
                           <img src="'.$value['photo'].'"/>
                           <div style="position: absolute;width:400px;height:40px;bottom:0px;;color:#f1f1f1;">
-                          <h4 style="display:inline-block; margin-left:6px">'.$value['username'].'</h4>';
+                          <h4 style="display:inline-block; margin-left:6px"><strong>'.$value['username'].'</strong></h4>';
                   if (loggedIn()){
                     delete($value, $row);
                   }
@@ -161,6 +155,7 @@ function delete($value, $row){
           </ul>
         </nav>
     </div>
+    <iframe style="z-index:-1;position: absolute;border:none;" name="iframe_a"></iframe>
 
   </body>
 </html>

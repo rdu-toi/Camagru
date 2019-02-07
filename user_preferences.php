@@ -28,30 +28,30 @@ function isUnique($email){
 	}
 }
 
-function comemail(){
-	try {
-			$query = "SELECT * FROM `user_info` WHERE `email` = '$user_email'";
-			$result = $conn->query($query);
-			$row = $result->fetch(PDO::FETCH_ASSOC);
-			if ($row['comemail'] === 0){
-				$query = $conn->prepare( "UPDATE `user_info` SET `comemail`='1' WHERE `email`='$email'" );
-				$query->execute();
-				echo '<button type="submit" name="enable" class="btn btn-default">Enable email notification for comments</button>';
-				header("Location:index.php?success=" . urlencode("You will not recieve emails for comments!"));
-				exit();
-			}
-			else{
-				$query = $conn->prepare( "UPDATE `user_info` SET `comemail`='0' WHERE `email`='$email'" );
-				$query->execute();
-				echo '<button type="submit" name="disable" class="btn btn-default">Disable email notification for comments</button>';
-				header("Location:index.php?success=" . urlencode("You will now recieve emails for comments!"));
-				exit();
-			}
-	}
-	catch(PDOException $e){
-			echo "Error: " . $e->getMessage();
-			}
-}
+// function comemail(){
+// 	try {
+// 			$query = "SELECT * FROM `user_info` WHERE `email` = '$user_email'";
+// 			$result = $conn->query($query);
+// 			$row = $result->fetch(PDO::FETCH_ASSOC);
+// 			if ($row['comemail'] === 0){
+// 				$query = $conn->prepare( "UPDATE `user_info` SET `comemail`='1' WHERE `email`='$email'" );
+// 				$query->execute();
+// 				echo '<button type="submit" name="enable" class="btn btn-default">Enable email notification for comments</button>';
+// 				header("Location:index.php?success=" . urlencode("You will not recieve emails for comments!"));
+// 				exit();
+// 			}
+// 			else{
+// 				$query = $conn->prepare( "UPDATE `user_info` SET `comemail`='0' WHERE `email`='$email'" );
+// 				$query->execute();
+// 				echo '<button type="submit" name="disable" class="btn btn-default">Disable email notification for comments</button>';
+// 				header("Location:index.php?success=" . urlencode("You will now recieve emails for comments!"));
+// 				exit();
+// 			}
+// 	}
+// 	catch(PDOException $e){
+// 			echo "Error: " . $e->getMessage();
+// 			}
+// }
 
 if (isset($_POST['submit'])){
 	if (strlen($_POST['name']) < 3){
@@ -190,6 +190,12 @@ if (isset($_POST['submit'])){
         <form action="user_preferences.php" method="post" style="margin-top:35px;" >
             <h2>Change Details</h2>
 
+			<?php if(isset($_GET['success'])) { ?>
+
+			<div class="alert alert-success"><?php echo $_GET['success']; ?></div>
+
+			<?php } ?>
+
 			<?php if(isset($_GET['err'])) { ?>
 
 			<div class="alert alert-danger"><?php echo $_GET['err']; ?></div>
@@ -216,7 +222,27 @@ if (isset($_POST['submit'])){
             <button type="submit" name="submit" class="btn btn-default">Save</button>
 						<br>
 						<?php
-							comemail();
+						try{
+							$query = "SELECT * FROM `user_info` WHERE `email` = '$user_email'";
+							$result = $conn->query($query);
+							$row = $result->fetch(PDO::FETCH_ASSOC);
+							if ($row['comemail'] == 0){
+								echo
+								'<a style="margin-top:15px;" class="btn btn-primary a-btn-slide-text" href="comemail.php?confirm=yes">
+									<span><strong>Enable email for comments on your pics</strong></span>
+								</a>';
+							}
+							else{
+								echo
+								'<a style="margin-top:15px;" class="btn btn-primary a-btn-slide-text" href="comemail.php?confirm=no">
+									<span><strong>Disable email for comments on your pics</strong></span>
+								</a>';
+							}
+						}
+						catch(PDOException $e)
+							{
+							echo "Error: " . $e->getMessage();
+							}
 						?>
         </form>
 
