@@ -28,31 +28,6 @@ function isUnique($email){
 	}
 }
 
-// function comemail(){
-// 	try {
-// 			$query = "SELECT * FROM `user_info` WHERE `email` = '$user_email'";
-// 			$result = $conn->query($query);
-// 			$row = $result->fetch(PDO::FETCH_ASSOC);
-// 			if ($row['comemail'] === 0){
-// 				$query = $conn->prepare( "UPDATE `user_info` SET `comemail`='1' WHERE `email`='$email'" );
-// 				$query->execute();
-// 				echo '<button type="submit" name="enable" class="btn btn-default">Enable email notification for comments</button>';
-// 				header("Location:index.php?success=" . urlencode("You will not recieve emails for comments!"));
-// 				exit();
-// 			}
-// 			else{
-// 				$query = $conn->prepare( "UPDATE `user_info` SET `comemail`='0' WHERE `email`='$email'" );
-// 				$query->execute();
-// 				echo '<button type="submit" name="disable" class="btn btn-default">Disable email notification for comments</button>';
-// 				header("Location:index.php?success=" . urlencode("You will now recieve emails for comments!"));
-// 				exit();
-// 			}
-// 	}
-// 	catch(PDOException $e){
-// 			echo "Error: " . $e->getMessage();
-// 			}
-// }
-
 if (isset($_POST['submit'])){
 	if (strlen($_POST['name']) < 3){
 		header("Location:user_preferences.php?err=" . urlencode("The name must be at least 3 characters long!"));
@@ -165,18 +140,12 @@ if (isset($_POST['submit'])){
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
           <a class="navbar-brand" href="#">Camagru</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <div id="navbar" class="navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="logout.php">Logout</a></li>
             <li><a href="gallery.php">Gallery</a></li>
@@ -248,4 +217,7 @@ if (isset($_POST['submit'])){
 
     </div>
   </body>
+  <footer>
+  <div class="text-center">© 2019 Copyright: rdu-toi Camagru</div>
+  </footer>
 </html>

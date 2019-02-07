@@ -24,6 +24,10 @@ if (isset($_POST['confirm'])){
         $stmt->bindValue(':id', $id);
         $stmt->execute();
         $stmt = null;
+        $stmt = $conn->prepare("DELETE FROM `comments` WHERE `photoid` = :id");
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+        $stmt = null;
         header("Location:gallery.php?success=" . urlencode("Image successfully deleted!"));
         exit();
         }
@@ -50,18 +54,12 @@ if (isset($_POST['confirm'])){
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
           <a class="navbar-brand" href="#">Camagru</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <div id="navbar" class="navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="logout.php">Logout</a></li>
             <li><a href="myaccount.php">My Account</a></li>
@@ -75,14 +73,12 @@ if (isset($_POST['confirm'])){
     <div class="container">
         <div class="jumbotron">
             <h2>Welcome <?php
-            if (loggedIn()){ 
-                if(isset($_SESSION['user_email'])){
-                    echo $_SESSION['user_email'];
-                }
-                else if(isset($_COOKIE['user_email'])){
-                    echo $_COOKIE['user_email'];
-                }
-            }?>
+                $query = "SELECT * FROM `user_info` WHERE `email` = '$useremail'";
+                $result = $conn->query($query);
+                $row = $result->fetch(PDO::FETCH_ASSOC);
+                $username = $row['username'];
+                echo $username;
+            ?>
             </h2>
         </div>
     </div>
@@ -109,4 +105,7 @@ if (isset($_POST['confirm'])){
         ?>
     </div>
   </body>
+  <footer>
+  <div class="text-center">© 2019 Copyright: rdu-toi Camagru</div>
+  </footer>
 </html>

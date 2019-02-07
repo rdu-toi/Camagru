@@ -59,15 +59,9 @@ if (isset($_POST['submit'])){
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
           <a class="navbar-brand" href="#">Camagru</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <div id="navbar" class="navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="logout.php">Logout</a></li>
             <li><a href="gallery.php">Gallery</a></li>
@@ -79,11 +73,12 @@ if (isset($_POST['submit'])){
 
     <div class="container">
         <div class="jumbotron">
-            <h2>Welcome <?php if(isset($_SESSION['user_email'])){ 
-              echo $_SESSION['user_email'];} 
-              else if ($_COOKIE['user_email']){
-                echo $_COOKIE['user_email'];}
-              else echo "Human!"; 
+            <h2>Welcome <?php 
+                $query = "SELECT * FROM `user_info` WHERE `email` = '$getname'";
+                $result = $conn->query($query);
+                $row = $result->fetch(PDO::FETCH_ASSOC);
+                $username = $row['username'];
+                echo $username;
               ?>
             </h2>
         </div>
@@ -121,4 +116,8 @@ if (isset($_POST['submit'])){
 
     <script src="js/photo.js"></script>
   </body>
+
+  <footer>
+  <div class="text-center">© 2019 Copyright: rdu-toi Camagru</div>
+  </footer>
 </html>

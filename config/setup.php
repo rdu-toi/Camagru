@@ -1,6 +1,9 @@
 <?php
 
-include 'database.php';
+$DB_DSN_SHORT = "mysql:host=localhost;charset=utf8";
+$DB_NAME = "Camagru_";
+$DB_USER = "root";
+$DB_PASSWORD = "administrator";
 
 //Create database "Camagru"
 
@@ -54,8 +57,7 @@ try {
         `userid` INT(100) NOT NULL,
         `username` VARCHAR(30),
         `photo` MEDIUMTEXT NOT NULL,
-        `likes` MEDIUMINT NOT NULL DEFAULT '0',
-        FOREIGN KEY (userid) REFERENCES User_info(id)
+        `likes` MEDIUMINT NOT NULL DEFAULT '0'
     )";
 
     $conn->exec($sql);
@@ -78,7 +80,7 @@ try {
         `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         `photoid` INT(100) NOT NULL,
         `username` VARCHAR(30) NOT NULL,
-        `comment` VARCHAR(300),
+        `comment` VARCHAR(300)
     )";
 
     $conn->exec($sql);

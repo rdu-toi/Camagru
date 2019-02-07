@@ -20,17 +20,17 @@ function delete($value, $row){
   if ($value['userid'] === $row['id']){
     echo '
     <a style="float:right; margin-right: 10px" href="delete.php?id='.$value['id'].'" class="btn btn-primary a-btn-slide-text">
-    <span><strong>Delete</strong></span>            
-    </a>';
-    echo '
-    <a style="float:right; margin-right: 10px" href="comments.php?id='.$value['id'].'" class="btn btn-primary a-btn-slide-text">
-    <span><strong>Comment</strong></span>            
+    <span><strong>Delete</strong></span>
     </a>';
   }
   else{
     echo '
     <a style="float:right; margin-right: 10px" target="iframe_a" class="btn btn-primary a-btn-slide-text" href="like.php?id='.$value['id'].'">
-      <span><strong>Like</strong></span>            
+      <span><strong>Like</strong></span>
+    </a>';
+    echo '
+    <a style="float:right; margin-right: 10px" href="comments.php?id='.$value['id'].'&userid='.$value['userid'].'" class="btn btn-primary a-btn-slide-text">
+    <span><strong>Comment</strong></span>
     </a>';
   }
 }
@@ -52,18 +52,12 @@ function delete($value, $row){
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
           <a class="navbar-brand" href="#">Camagru</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <div id="navbar" class="navbar-collapse">
           <ul class="nav navbar-nav">
           <?php
             if(loggedIn()){
@@ -84,15 +78,15 @@ function delete($value, $row){
     <div class="container">
         <div class="jumbotron">
             <h2>Welcome <?php
-            if (loggedIn()){ 
-                if(isset($_SESSION['user_email'])){
-                    echo $_SESSION['user_email'];
-                }
-                else if(isset($_COOKIE['user_email'])){
-                    echo $_COOKIE['user_email'];
-                }
-                else echo "Guest";
+            if (loggedIn()){
+              $useremail = $_SESSION['user_email'];
+              $query = "SELECT * FROM `user_info` WHERE `email` = '$useremail'";
+              $result = $conn->query($query);
+              $row = $result->fetch(PDO::FETCH_ASSOC);
+              $username = $row['username'];
+              echo $username;
             }
+            else echo "Human";
             ?>
             </h2>
         </div>
@@ -146,7 +140,7 @@ function delete($value, $row){
         ?>
         <br>
     </div>
-    <div>
+    <div class="page">
         <nav aria-label="Page navigation example">
           <ul class="pagination">
           <?php
@@ -158,4 +152,7 @@ function delete($value, $row){
     <iframe style="z-index:-1;position: absolute;border:none;" name="iframe_a"></iframe>
 
   </body>
+  <footer>
+  <div class="text-center">© 2019 Copyright: rdu-toi Camagru</div>
+  </footer>
 </html>

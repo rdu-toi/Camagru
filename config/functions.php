@@ -7,5 +7,4 @@ function loggedIn(){
     } else 
         return false;
 }
-
 ?>

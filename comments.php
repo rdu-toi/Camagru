@@ -16,6 +16,13 @@ if (isset($_GET['id'])){
 $idstr = $_SESSION['id'];
 $id = (int)$idstr;
 
+if (isset($_GET['userid'])){
+  $_SESSION['userid'] = $_GET['userid'];
+}
+
+$useridstr = $_SESSION['userid'];
+$userid = (int)$useridstr;
+
 $useremail = $_SESSION['user_email'];
 
 if (isset($_POST['submitcomment'])){
@@ -30,6 +37,15 @@ if (isset($_POST['submitcomment'])){
           $stmt->bindValue(':username', $row['username']);
           $stmt->execute();
           $stmt = null;
+          $user = $row['username'];
+          $querytwo = "SELECT * FROM `user_info` WHERE `id` = '$userid'";
+          $results = $conn->query($querytwo);
+          $rows = $results->fetch(PDO::FETCH_ASSOC);
+          if ($rows['comemail']){
+            $user_email = $rows['email'];
+            $message = "$user commented on one of your pics. Comment: $comment";
+            mail($user_email, 'Someone commented on your pic!', $message, 'From: rdu-toi@student.wethinkcode.co.za');
+          }
         }
         header("Location:gallery.php?success=" . urlencode("Comment submitted!"));
         exit();
@@ -57,18 +73,12 @@ if (isset($_POST['submitcomment'])){
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
           <a class="navbar-brand" href="#">Camagru</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <div id="navbar" class="navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="logout.php">Logout</a></li>
             <li><a href="myaccount.php">My Account</a></li>
@@ -82,18 +92,16 @@ if (isset($_POST['submitcomment'])){
     <div class="container">
         <div class="jumbotron">
             <h2>Welcome <?php
-            if (loggedIn()){ 
-                if(isset($_SESSION['user_email'])){
-                    echo $_SESSION['user_email'];
-                }
-                else if(isset($_COOKIE['user_email'])){
-                    echo $_COOKIE['user_email'];
-                }
-            }?>
+                $query = "SELECT * FROM `user_info` WHERE `email` = '$useremail'";
+                $result = $conn->query($query);
+                $row = $result->fetch(PDO::FETCH_ASSOC);
+                $username = $row['username'];
+                echo $username;
+            ?>
             </h2>
         </div>
     </div>
-    </br>
+    <br>
     <div class="booth">
         <?php
             try {
@@ -112,4 +120,7 @@ if (isset($_POST['submitcomment'])){
         ?>
     </div>
   </body>
+  <footer>
+  <div class="text-center">© 2019 Copyright: rdu-toi Camagru</div>
+  </footer>
 </html>
