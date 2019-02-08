@@ -38,7 +38,6 @@
                 }
                 var dataURL = canvas.toDataURL('image/png');
                 document.getElementById("imgsrc").value = dataURL;
-                console.log(document.getElementById("imgsrc").value);
             }
         });
     });}
