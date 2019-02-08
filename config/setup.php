@@ -1,7 +1,7 @@
 <?php
 
 $DB_DSN_SHORT = "mysql:host=localhost;charset=utf8";
-$DB_NAME = "Camagru_";
+$DB_NAME = "Camagru";
 $DB_USER = "root";
 $DB_PASSWORD = "administrator";
 
@@ -85,6 +85,8 @@ try {
 
     $conn->exec($sql);
     echo "Table Comments created successfully";
+    header("Location:../index.php?success=" .urlencode("Camagru database and associated tables successfully created!"));
+    exit();
     }
 catch(PDOException $e)
     {
