@@ -99,7 +99,7 @@ if (isset($_POST['register'])){
 			$stmt = $conn->prepare("INSERT INTO `user_info` (`username`, `password`, `email`, `token`) VALUES ('$name', '$hashed_password', '$email', '$token')");
 			$stmt->execute();
       $stmt = null;
-      $message = "Hi $name! Your account has been created, here is the activation link http://localhost:8080/Camagru_v2/activate.php?token=$token";
+      $message = "Hi $name! Your account has been created, here is the activation link http://localhost:8080/Camagru/activate.php?token=$token";
       mail($email, 'Activate Account', $message, 'From: rdu-toi@student.wethinkcode.co.za');
       header("Location:index.php?success=" . urlencode("Activation email sent"));
       exit();

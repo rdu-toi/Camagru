@@ -107,11 +107,44 @@ if (isset($_POST['submit'])){
     </div>
     </br>
     <div class="flex-container">
-        <img class="items" src="http://localhost:8080/Camagru_v2/img/1.png">
-        <img class="items" src="http://localhost:8080/Camagru_v2/img/2.png">
-        <img class="items" src="http://localhost:8080/Camagru_v2/img/3.png">
-        <img class="items" src="http://localhost:8080/Camagru_v2/img/4.png">
-        <img class="items" src="http://localhost:8080/Camagru_v2/img/5.png">
+        <img class="items" src="http://localhost:8080/Camagru/img/1.png">
+        <img class="items" src="http://localhost:8080/Camagru/img/2.png">
+        <img class="items" src="http://localhost:8080/Camagru/img/3.png">
+        <img class="items" src="http://localhost:8080/Camagru/img/4.png">
+        <img class="items" src="http://localhost:8080/Camagru/img/5.png">
+    </div>
+    <div class="flex-container">
+        <?php
+            try {
+              $email = $_SESSION['user_email'];
+              $query = "SELECT * FROM `user_info` WHERE `email` = '$email'";
+              $result = $conn->query($query);
+              $row = $result->fetch(PDO::FETCH_ASSOC);
+
+              $results = $conn->prepare("SELECT * FROM `gallery` ORDER by id DESC");
+              $results->execute();
+              $rows = $results->fetchAll();
+              $count = $results->rowCount();
+              foreach($rows as $key => $value){
+                if ($key <= 4){
+                  echo '<div style="position:relative;float:left;margin:10px;border:3px solid black;">
+                          <img style="width:200px;height:150px;" src="'.$value['photo'].'"/>
+                          <div style="position: absolute;width:200px;height:40px;bottom:0px;;color:#f1f1f1;">';
+                  echo '
+                  <a style="float:right; margin-right: 10px" href="delete.php?id='.$value['id'].'" class="btn btn-primary a-btn-slide-text">
+                  <span><strong>Delete</strong></span>
+                  </a>';
+                  echo '</div>
+                        </div>';
+                }
+              }
+            }
+            catch(PDOException $e)
+            {
+              echo "Error: " . $e->getMessage();
+            }
+        ?>
+        <br>
     </div>
 
     <script src="js/photo.js"></script>

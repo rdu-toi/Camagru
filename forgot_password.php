@@ -12,7 +12,7 @@ if(isset($_POST['send_my_password'])){
 
     $name = $row['username'];
     $token = $row['token'];
-    if(mail($email, 'Update Password!', "Hi, $name. To change your password click on this link: http://localhost:8080/Camagru_v2/change_password.php?token=$token", 'From: rdu-toi@student.wethinkcode.co.za')){
+    if(mail($email, 'Update Password!', "Hi, $name. To change your password click on this link: http://localhost:8080/Camagru/change_password.php?token=$token", 'From: rdu-toi@student.wethinkcode.co.za')){
       header("Location:index.php?success=" . urlencode("To change your password, check the link in your email!"));
       exit();
     } else {

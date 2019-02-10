@@ -91,10 +91,6 @@ if (isset($_POST['submit'])){
 			$token = $row['token'];
 			$username = $row['username'];
 
-			$stmt = $conn->prepare( "UPDATE `user_info` SET STATUS='0' WHERE `token`='$token'" );
-			$stmt->execute();
-			$stmt = null;
-
 			$stmt = $conn->prepare( "UPDATE `gallery` SET `username` = '$name' WHERE `username`='$username'" );
 			$stmt->execute();
 			$stmt = null;
@@ -106,8 +102,12 @@ if (isset($_POST['submit'])){
 			$stmt = $conn->prepare("UPDATE `user_info` SET `username` = '$name', `password` = '$hashed_password', `email` = '$email' WHERE `email` = '$user_email'");
 			$stmt->execute();
       $stmt = null;
-      $message = "Hi $name! You have successfully changed your details, here is the activation link http://localhost:8080/Camagru_v2/activate.php?token=$token";
+      $message = "Hi $name! You have successfully changed your details, here is the activation link http://localhost:8080/Camagru/activate.php?token=$token";
 			mail($email, 'Activate Account', $message, 'From: rdu-toi@student.wethinkcode.co.za');
+
+			$stmt = $conn->prepare( "UPDATE `user_info` SET STATUS='0' WHERE `token`='$token'" );
+			$stmt->execute();
+			$stmt = null;
 
 			session_destroy();
 			

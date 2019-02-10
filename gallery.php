@@ -26,7 +26,7 @@ function delete($value, $row){
   else{
     echo '
     <a style="float:right; margin-right: 10px" target="iframe_a" class="btn btn-primary a-btn-slide-text" href="like.php?id='.$value['id'].'">
-      <span><strong>Like</strong></span>
+      <span><strong>Like '.$value['likes'].'</strong></span>
     </a>';
     echo '
     <a style="float:right; margin-right: 10px" href="comments.php?id='.$value['id'].'&userid='.$value['userid'].'" class="btn btn-primary a-btn-slide-text">
@@ -103,7 +103,7 @@ function delete($value, $row){
 
     <?php } ?>
     <br>
-    <div>
+    <div class="flex-container">
         <?php
             try {
               $email = $_SESSION['user_email'];

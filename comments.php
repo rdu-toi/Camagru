@@ -47,7 +47,7 @@ if (isset($_POST['submitcomment'])){
             mail($user_email, 'Someone commented on your pic!', $message, 'From: rdu-toi@student.wethinkcode.co.za');
           }
         }
-        header("Location:gallery.php?success=" . urlencode("Comment submitted!"));
+        header("Location:comments.php?success=" . urlencode("Comment submitted!"));
         exit();
         }
     catch(PDOException $e)
@@ -101,6 +101,11 @@ if (isset($_POST['submitcomment'])){
             </h2>
         </div>
     </div>
+    <?php if(isset($_GET['success'])) { ?>
+
+        <div class="alert alert-success"><?php echo $_GET['success']; ?></div>
+
+    <?php } ?>
     <br>
     <div class="booth">
         <?php
@@ -109,9 +114,24 @@ if (isset($_POST['submitcomment'])){
                 $results->execute();
                 $rows = $results->fetchAll(PDO::FETCH_ASSOC);
                 foreach($rows as $key => $value){
-                  echo '<img src="'.$value['photo'].'" width="400" height="300";/>
-                  <form action="comments.php" method="post";><textarea rows="5" cols="48" name="comment" required placeholder="Leave a comment here!";></textarea><button type="submit" class="btn btn-default" name="submitcomment">Submit Comment</button></form></div>';
+                  echo '
+                  <img src="'.$value['photo'].'" width="400" height="300";/>
+                  <form action="comments.php" method="post";>
+                    <textarea style="resize:none;" rows="5" cols="54" name="comment" required placeholder="Leave a comment here!";></textarea>
+                    <button type="submit" class="btn btn-default" name="submitcomment">Submit Comment</button>
+                  </form>';
                 }
+                echo '<textarea style="resize:none;" rows="6" cols="54" disabled>';
+                $results = $conn->prepare("SELECT * FROM `comments` WHERE `photoid` = '$id' ORDER by id DESC");
+                $results->execute();
+                $row = $results->fetchAll(PDO::FETCH_ASSOC);
+                foreach($row as $key => $value){
+                echo $value['username'];
+                echo ": ";
+                echo $value['comment'];
+                echo "\n";
+                }
+                echo '</textarea></div>';
             }
               catch(PDOException $e)
                 {
